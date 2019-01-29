@@ -1,6 +1,7 @@
 package com.wildgroup.websocket_package;
 
 import com.wildgroup.api.*;
+import com.wildgroup.api.Message;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -14,17 +15,22 @@ import java.io.IOException;
 public class ServerEndPoint {
 
     @OnOpen
-    public void open(Session session) throws IOException, EncodeException {
+    public void open(Session session){
     }
 
     @OnClose
-    public void close(Session session) throws IOException, EncodeException {
+    public void close(Session session) {
+    }
+
+    @OnError
+    public void error(Session session, Throwable throwable) throws Throwable {
+        throw throwable;
     }
 
     @OnMessage
-    public void handleMessage(String s_message, Session session) throws IOException, EncodeException {
-        Message message = new Message(s_message);
-        switch (message.getMethod()){
+    public void handleMessage(String message, Session session) {
+        Message myMessage = new Message(message);
+        switch (myMessage.getMethod()){
             case MessageMethods.CREATEUSER:
                 // Do CreateUSER function;
 
@@ -33,7 +39,11 @@ public class ServerEndPoint {
                 // Do Login function;
                 break;
             default:
-                session.getBasicRemote().sendText("Massage not implemented");
+                try {
+                    session.getBasicRemote().sendText("Massage not implemented");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }

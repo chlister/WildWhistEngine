@@ -7,7 +7,17 @@
         <element id="directory" name="classes">
           <element id="module-output" name="WildWhistEngine" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="WildWhistAPI" />
+          <element id="library" level="project" name="mysql-connector-java-8.0.14" />
+        </element>
       </element>
+      <element id="library" level="project" name="gson-2.8.5" />
+      <element id="library" level="project" name="jackson-core-2.9.8" />
+      <element id="library" level="project" name="jackson-databind-2.9.8" />
+      <element id="library" level="project" name="mysql-connector-java-8.0.14" />
+      <element id="library" level="project" name="tyrus-standalone-client-1.9" />
+      <element id="library" level="project" name="WildWhistAPI" />
     </root>
   </artifact>
 </component>
