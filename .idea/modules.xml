@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/WildWhistAPI/WildWhistAPI.iml" filepath="$PROJECT_DIR$/WildWhistAPI/WildWhistAPI.iml" />
       <module fileurl="file://$PROJECT_DIR$/WildWhistEngine.iml" filepath="$PROJECT_DIR$/WildWhistEngine.iml" />
     </modules>
   </component>
