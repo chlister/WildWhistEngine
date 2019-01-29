@@ -1,6 +1,6 @@
 package com.wildgroup.api;
 
 public class MessageMethods {
-    static final int CREATEUSER = 1 ;
-    static final int LOGIN = 2 ;
+    static public final int CREATEUSER = 1 ;
+    static public final int LOGIN = 2 ;
 }
