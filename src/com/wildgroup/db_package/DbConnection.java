@@ -17,7 +17,7 @@ public class DbConnection {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/wildgameenginedb?user=wilduser&password=wildwhist");
         }catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -31,7 +31,7 @@ public class DbConnection {
             rs = st.executeQuery(sql);
             return rs;
         } catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }

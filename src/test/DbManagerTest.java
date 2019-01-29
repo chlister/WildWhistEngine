@@ -45,7 +45,7 @@ public class DbManagerTest {
 
     /**
      * @author Marc Rohwedder Kær
-     * @date ${DATE}
+     * @date 28-01-2019
      * Test returning a resultset from the database
      */
     @Test
