@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="WildWhistEngine:war">
+    <output-path>$PROJECT_DIR$/war/</output-path>
+    <root id="archive" name="WildWhistEngine_war.war">
+      <element id="artifact" artifact-name="WildWhistEngine:war exploded" />
+    </root>
+  </artifact>
+</component>
