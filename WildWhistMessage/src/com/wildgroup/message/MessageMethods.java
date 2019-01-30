@@ -1,4 +1,4 @@
-package com.wildgroup.api;
+package com.wildgroup.message;
 
 public class MessageMethods {
     static public final int CREATEUSER = 1 ;

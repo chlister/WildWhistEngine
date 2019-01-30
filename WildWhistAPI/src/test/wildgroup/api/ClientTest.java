@@ -2,12 +2,8 @@ package test.wildgroup.api;
 
 
 import com.wildgroup.api.Client;
-import com.wildgroup.api.Message;
-import org.junit.Assert;
+import com.wildgroup.api.WebsocketClientEndpoint;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Martin Juul Johansen
@@ -15,10 +11,21 @@ import java.util.List;
  */
 public class ClientTest {
     @Test
-    public void TestLogin(){
+    public void TestLogin() {
         Client c = new Client();
         System.out.println("Client ready");
-        c.Login("kagehak@gmail.com", "kagehak", "1234");
+        final int[] response = new int[1];
+        response[0] = 0;
+        c.addNewMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
+            @Override
+            public void handleMessage(String message) {
+                System.out.println(message);
+                response[0]++;
+            }
+        });
+        c.login("kagehak@gmail.com", "1234");
+        while(response[0] < 2){
 
+        }
     }
 }

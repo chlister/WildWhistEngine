@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/WildWhistAPI/WildWhistAPI.iml" filepath="$PROJECT_DIR$/WildWhistAPI/WildWhistAPI.iml" />
       <module fileurl="file://$PROJECT_DIR$/WildWhistEngine.iml" filepath="$PROJECT_DIR$/WildWhistEngine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WildWhistMessage/WildWhistMessage.iml" filepath="$PROJECT_DIR$/WildWhistMessage/WildWhistMessage.iml" />
     </modules>
   </component>
 </project>

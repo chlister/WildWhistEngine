@@ -1,7 +1,9 @@
 package com.wildgroup.websocket_package;
 
-import com.wildgroup.api.*;
-import com.wildgroup.api.Message;
+import com.wildgroup.message.*;
+import com.wildgroup.message.Message;
+import com.wildgroup.message.MessageMethods;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -16,6 +18,11 @@ public class ServerEndPoint {
 
     @OnOpen
     public void open(Session session){
+        try {
+            session.getBasicRemote().sendText("Connection ON!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClose
@@ -37,6 +44,11 @@ public class ServerEndPoint {
                 break;
             case MessageMethods.LOGIN:
                 // Do Login function;
+                try {
+                    session.getBasicRemote().sendText("LOGIN WORKS!!!");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 try {

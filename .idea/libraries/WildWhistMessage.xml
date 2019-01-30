@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="WildWhistAPI">
+  <library name="WildWhistMessage">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/WildWhistAPI.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/WildWhistMessage.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
