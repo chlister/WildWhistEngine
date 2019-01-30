@@ -1,7 +1,8 @@
 package com.wildgroup.api;
 
-import com.sun.xml.internal.bind.v2.TODO;
-import com.wildgroup.api.Model.UserModel;
+import com.wildgroup.message.Message;
+import com.wildgroup.message.Model.UserModel;
+import com.wildgroup.message.MessageMethods;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,9 +32,21 @@ public class Client {
         });
     }
 
-    public void Login(String email, String username, String password){
-        UserModel userModel = new UserModel(username, email, password, new Date()); //TODO: Add birthday to method;
+    public void addNewMessageHandler(WebsocketClientEndpoint.MessageHandler mh){
+        clientEndPoint.addMessageHandler(mh);
+    }
+
+
+    public void login(String email, String password){
+        UserModel userModel = new UserModel("", email, password, new Date());
         Message message = new Message(MessageMethods.LOGIN, userModel);
+        clientEndPoint.sendMessage(message.encode());
+    }
+
+    public void createUser(String email, String username, String password)//TODO: Add birthday to method;
+    {
+        UserModel userModel = new UserModel(username, email, password, new Date());
+        Message message = new Message(MessageMethods.CREATEUSER, userModel);
         clientEndPoint.sendMessage(message.encode());
     }
 }

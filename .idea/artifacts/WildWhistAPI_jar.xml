@@ -3,10 +3,7 @@
     <output-path>$PROJECT_DIR$/lib</output-path>
     <root id="archive" name="WildWhistAPI.jar">
       <element id="module-output" name="WildWhistAPI" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/WildWhistAPI/lib/gson-2.8.5.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/WildWhistAPI/lib/tyrus-standalone-client-1.9.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/WildWhistAPI/lib/jackson-core-2.9.8.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/WildWhistAPI/lib/jackson-databind-2.9.8.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" path-in-jar="/" />
     </root>

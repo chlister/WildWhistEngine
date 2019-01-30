@@ -1,6 +1,6 @@
 package test.wildgroup.api;
 
-import com.wildgroup.api.Message;
+import com.wildgroup.message.Message;
 import org.junit.*;
 
 import java.util.ArrayList;
@@ -12,8 +12,6 @@ import java.util.List;
  */
 
 public class MessageTest {
-
-
     
     @Test
     public void TestEncoding(){

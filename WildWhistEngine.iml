@@ -36,7 +36,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="mysql-connector-java-8.0.14" level="project" />
-    <orderEntry type="library" name="mysql-connector-java-8.0.14" level="project" />
-    <orderEntry type="library" name="WildWhistAPI" level="project" />
+    <orderEntry type="library" name="WildWhistMessage" level="project" />
   </component>
 </module>

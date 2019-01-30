@@ -1,4 +1,4 @@
-package com.wildgroup.api.Model;
+package com.wildgroup.message.Model;
 
 import java.util.Date;
 

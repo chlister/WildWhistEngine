@@ -1,4 +1,4 @@
-package com.wildgroup.api;
+package com.wildgroup.message;
 /**
  * @author Martin Juul Johansen
  * @date 29/01/2019
