@@ -2,7 +2,6 @@ package com.wildgroup.db_package;
 
 import com.wildgroup.db_package.dbModels.UserDb;
 import com.wildgroup.user_package.models.User;
-import javafx.scene.control.Tab;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,6 +23,12 @@ public class UserRepository extends DBRepository<User> {
             "VALUES ('%s', '%s', '%s', '%s', '%s', '%s')";
 
 
+    /**
+     * Method populates a user object
+     *
+     * @param rs ResultSet
+     * @return User object
+     */
     @Override
     User populate(ResultSet rs) {
         User us = null;
@@ -41,7 +46,14 @@ public class UserRepository extends DBRepository<User> {
         return us;
     }
 
-    // TODO: insertBuilder
+    /**
+     * Method for creating a user using a User object
+     *
+     * @param user User to be created
+     * @return int rows affected
+     * @author Marc Rohwedder Kær
+     * @date 29-01-2019
+     */
     public int insertBuilder(User user) {
         StringBuilder sb = new StringBuilder(
                 String.format(insert,
@@ -58,12 +70,18 @@ public class UserRepository extends DBRepository<User> {
         return insert(sb.toString());
     }
 
-    // TODO: updateBuilder
-
+    /**
+     * Input the User object to be updated
+     *
+     * @param user User to be updated
+     * @return int rows updated
+     * @author Marc Rohwedder Kær
+     * @date 29-01-2019
+     * Update user method - given a user object it will update
+     */
     public int updateUser(User user) {
         // First select the user in the database
-        User dbUser = get(String.format(select, TableNames.users) + String.format(whereClause, UserDb.id, user.getId()));
-//        System.out.println(dbUser.getFirstname());
+        User dbUser = get(String.format(select, TableNames.users) + String.format(whereClauseId, UserDb.id, user.getId()));
         // If user exists update the variables
         if (dbUser != null) {
             dbUser.setEmail(user.getEmail());
@@ -86,7 +104,7 @@ public class UserRepository extends DBRepository<User> {
                     .append(" ").append(dbUser.getEmail())
                     .append(String.format(addField, UserDb.birthday))
                     .append(" ").append(dbUser.getBirthday())
-                    .append(String.format(whereClause, UserDb.id, dbUser.getId()));
+                    .append(String.format(whereClauseId, UserDb.id, dbUser.getId()));
             System.out.println(sb);
 //           return update(String.format(update, TableNames.users, UserDb.firstName));
             return 1;
@@ -95,10 +113,38 @@ public class UserRepository extends DBRepository<User> {
     }
 
     // TODO: selectBuilder -> remember overloads
+
+    /**
+     * Select a single user via id
+     *
+     * @param id int user primary key
+     * @return User object
+     * @author Marc Rohwedder Kær
+     * @date 29-01-2019
+     */
     public User selectUser(int id) {
         StringBuilder sb = new StringBuilder();
+        // Select + table name
         sb.append(String.format(select, TableNames.users));
-        sb.append(String.format(whereClause, UserDb.id, id));
+        sb.append(String.format(whereClauseId, UserDb.id, id));
+        return get(sb.toString());
+    }
+
+    /**
+     * Select a single user via column + identifier
+     *
+     * @param column     UserDb column name
+     * @param identifier String search identifier
+     * @return User object
+     * @author Marc Rohwedder Kær
+     * @date 29-01-2019
+     */
+    public User selectUser(UserDb column, String identifier) {
+        StringBuilder sb = new StringBuilder();
+        // select table
+        sb.append(String.format(select, TableNames.users));
+        // where column = identifier
+        sb.append(String.format(whereClauseString, column, identifier));
         System.out.println(sb);
         return get(sb.toString());
     }
