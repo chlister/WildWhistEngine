@@ -9,6 +9,15 @@ import com.wildgroup.db_package.dbModels.EntityObject;
 public class Game extends EntityObject {
     private String name;
 
+    public Game(String name) {
+        this.name = name;
+    }
+
+    public Game(int id, String name) {
+        super(id);
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
