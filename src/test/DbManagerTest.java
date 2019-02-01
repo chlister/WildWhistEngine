@@ -2,6 +2,7 @@ package test;
 
 import com.wildgroup.db_package.DbConnection;
 import org.junit.*;
+
 import java.sql.*;
 
 /**
@@ -12,7 +13,7 @@ import java.sql.*;
 public class DbManagerTest {
 
     @Test
-    public void runTest(){
+    public void runTest() {
         Assert.fail("Not implemented");
     }
 
@@ -36,7 +37,7 @@ public class DbManagerTest {
      */
     private void TestConnectionOpen(DbConnection con) {
         try {
-            Assert.assertFalse("Connection is closed",con.getCon().isClosed());
+            Assert.assertFalse("Connection is closed", con.getCon().isClosed());
             System.out.println("Connection is open");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -49,15 +50,14 @@ public class DbManagerTest {
      * Test returning a resultset from the database
      */
     @Test
-    public void getResultSet(){
+    public void getResultSet() {
         try {
-        DbConnection con = new DbConnection();
-        ResultSet rs = con.executeSt("SELECT * FROM game");
-        while (rs.next()){
-            System.out.println("Id: " + rs.getInt("Id"));
-            System.out.println("Name: " + rs.getString("Name"));
-        }
-            System.out.println(rs.getStatement());
+            DbConnection con = new DbConnection();
+            ResultSet rs = con.executeSt("SELECT * FROM game");
+            while (rs.next()) {
+                System.out.println("Id: " + rs.getInt("Id"));
+                System.out.println("Name: " + rs.getString("Name"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

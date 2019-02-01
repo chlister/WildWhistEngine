@@ -1,3 +1,10 @@
+import com.wildgroup.db_package.UserRepository;
+import com.wildgroup.user_package.models.Player;
+import com.wildgroup.user_package.models.User;
+import org.junit.Assert;
+import org.junit.Test;
+import java.sql.Date;
+import java.util.*;
 
 /**
  * @author Marc Rohwedder Kær
@@ -5,10 +12,69 @@
  * Testing multiple CRUD operations
  */
 public class DB_CRUDTest {
+
+//    static private final String select = "SELECT * FROM %s ";
+//    static private final String insert = "INSERT INTO %s ";
+//    static private final String update = "UPDATE  %s ";
+//    static private final String delete = "DELETE * FROM %s ";
+    static private final String date = "%s-%s-%s"; // yyyy-MM-dd
+
+
     // TODO: UserCreate
+    @Test
+    public void userCreate() {
+        String year = "1990";
+        String month = "04";
+        String day = "07";
+        String bday = String.format(date, year, month, day);
+        UserRepository ur = new UserRepository();
+        User u = new User(
+                "Test2",
+                "",
+                "Tester",
+                "SecurePass!",
+                "sometest@test.org",
+                Date.valueOf(bday));
+//        System.out.println(u.getPassword());
+        System.out.println("Number of rows affected: " + ur.insertBuilder(u));
+    }
     // TODO: UserUpdate
+    @Test
+    public void userUpdate() {
+        UserRepository ur = new UserRepository();
+        User dbUser = ur.selectUser(1);
+        dbUser.setFirstname("John");
+        int res = ur.updateUser(dbUser);
+        System.out.println(res);
+        Assert.assertEquals("Nothing was updated",1, res);
+    }
     // TODO: UserGet
+    @Test
+    public void getUser(){
+        UserRepository ur = new UserRepository();
+        User u = ur.selectUser(11);
+        Assert.assertNotNull("Object couldn't be parsed, or no entries in database",u);
+    }
     // TODO: MultipleUserCreate
+    @Test
+    public void multiUserCreate() {
+        String year = "1990";
+        String month = "04";
+        String day = "07";
+        String bday = String.format(date, year, month, day);
+        UserRepository ur = new UserRepository();
+        for (int i = 0; i < 10; i++){
+
+            User u = new User(
+                    "Test"+i,
+                    "",
+                    "Tester",
+                    "SecurePass!",
+                    "sometest@test.org",
+                    Date.valueOf(bday));
+            System.out.println("Number of rows affected: " + ur.insertBuilder(u));
+        }
+    }
     // TODO: MultipleUserGet
     // TODO: UserDelete
 
