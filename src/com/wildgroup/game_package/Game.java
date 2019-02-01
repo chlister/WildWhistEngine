@@ -1,6 +1,6 @@
 package com.wildgroup.game_package;
 
-import com.wildgroup.db_package.EntityObject;
+import com.wildgroup.db_package.dbModels.EntityObject;
 
 /**
  * @author Marc Rohwedder Kær

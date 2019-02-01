@@ -1,6 +1,6 @@
 package com.wildgroup.user_package.models;
 
-import com.wildgroup.db_package.EntityObject;
+import com.wildgroup.db_package.dbModels.EntityObject;
 import java.sql.Blob;
 
 /**
