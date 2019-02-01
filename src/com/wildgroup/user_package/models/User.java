@@ -12,31 +12,71 @@ import java.util.Date;
  * @date 29-01-2019
  */
 public class User extends EntityObject {
-    private String firstName, middleName, lastName, email, password;
+    private String firstname;
+    private String middelname;
+    private String lastname;
+    private String email;
+    private String password;
     private Date birthday;
 
-    public String getFirstName() {
-        return firstName;
+    /**
+     *
+     * @param firstname String
+     * @param middelname String
+     * @param lastname String
+     * @param password String
+     * @param email String
+     * @param birthday Date
+     */
+    public User(String firstname, String middelname, String lastname, String password, String email, Date birthday) {
+        this.firstname = firstname;
+        this.middelname = middelname;
+        this.lastname = lastname;
+        setPassword(password);
+        this.email = email;
+        this.birthday = birthday;
+    }
+    /**
+     * @param firstname String
+     * @param middelname String
+     * @param lastname String
+     * @param password String
+     * @param email String
+     * @param birthday Date
+     * @param id Int
+     */
+    public User(String firstname, String middelname, String lastname, String password, String email, Date birthday, int id) {
+        super(id);
+        this.firstname = firstname;
+        this.middelname = middelname;
+        this.lastname = lastname;
+        setPassword(password);
+        this.email = email;
+        this.birthday = birthday;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public String getMiddleName() {
-        return middleName;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
+    public String getMiddelname() {
+        return middelname;
     }
 
-    public String getLastName() {
-        return lastName;
+    public void setMiddelname(String middelname) {
+        this.middelname = middelname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {

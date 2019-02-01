@@ -7,11 +7,14 @@ package com.wildgroup.db_package;
 public abstract class EntityObject {
     private int id;
 
+    public EntityObject(){}
+
+    public EntityObject(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 }
