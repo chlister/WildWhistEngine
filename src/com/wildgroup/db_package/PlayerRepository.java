@@ -14,7 +14,7 @@ public class PlayerRepository extends DBRepository<Player> {
         Player pl = null;
         try{
             pl = new Player();
-            pl.setId(rs.getInt("id"));
+//            pl.setId(rs.getInt("id"));
             pl.setAvatar(rs.getBlob("avatar"));
             pl.setName(rs.getString("name"));
         }catch (SQLException e){

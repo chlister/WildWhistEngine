@@ -16,7 +16,7 @@ public class GameRepository extends DBRepository<Game> {
         try {
             game = new Game();
             game.setName(rs.getString("name"));
-            game.setId(rs.getInt("id"));
+//            game.setId(rs.getInt("id"));
         }catch (SQLException e){
             e.printStackTrace();
         }
