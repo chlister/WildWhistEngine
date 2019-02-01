@@ -1,5 +1,7 @@
 package com.wildgroup.db_package;
 
+import com.wildgroup.db_package.dbModels.EntityObject;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,13 +11,16 @@ import java.util.Collection;
  * @date 29-01-2019
  * Abstract db manager class
  */
-abstract class DBRepository<T> {
+abstract class DBRepository<T extends EntityObject> {
 
     static final String select = "SELECT * FROM %s "; // SELECT * FROM [TableName]
     static final String insert = "INSERT INTO %s %s "; // INSERT INTO [TableName] [VALUES]
     static final String update = "UPDATE  %s SET %s = "; // UPDATE [TableName] SET [Field] =
     static final String addField = ", %s = "; // , [Field] =
-    static final String whereClause = " WHERE %s = %d"; // Where [PrimaryKey] = [id]
+    static final String whereClauseId = " WHERE %s = %d"; // Where [PrimaryKey] = [id]
+    static final String whereClauseString = " WHERE %s = '%s'"; // Where [PrimaryKey] = [id]
+    // TODO: Join clause
+    // TODO: Target select
     static final String delete = "DELETE * FROM %s WHERE %s = %d"; // DELETE * FROM [TableName] WHERE PrimaryKey = [id]
     private Connection con;
     private Statement st;
