@@ -59,9 +59,9 @@ public class UserRepository extends DBRepository<User> {
                 String.format(insert,
                         TableNames.users,
                         String.format(values,
-                                user.getFirstname(),
-                                user.getMiddelname(),
-                                user.getLastname(),
+                                user.getFirst_name(),
+                                user.getMiddle_name(),
+                                user.getLast_name(),
                                 user.getPassword(),
                                 user.getEmail(),
                                 user.getBirthday()
@@ -85,19 +85,19 @@ public class UserRepository extends DBRepository<User> {
         // If user exists update the variables
         if (dbUser != null) {
             dbUser.setEmail(user.getEmail());
-            dbUser.setFirstname(user.getFirstname());
-            dbUser.setMiddelname(user.getMiddelname());
-            dbUser.setLastname(user.getLastname());
+            dbUser.setFirst_name(user.getFirst_name());
+            dbUser.setMiddle_name(user.getMiddle_name());
+            dbUser.setLast_name(user.getLast_name());
             dbUser.setBirthday(user.getBirthday());
             dbUser.setPassword(user.getPassword());
             StringBuilder sb = new StringBuilder();
             sb
                     .append(String.format(update, TableNames.users, UserDb.firstName))
-                    .append(" ").append(dbUser.getFirstname())
+                    .append(" ").append(dbUser.getFirst_name())
                     .append(String.format(addField, UserDb.middleName))
-                    .append(" ").append(dbUser.getMiddelname())
+                    .append(" ").append(dbUser.getMiddle_name())
                     .append(String.format(addField, UserDb.lastName))
-                    .append(" ").append(dbUser.getLastname())
+                    .append(" ").append(dbUser.getLast_name())
                     .append(String.format(addField, UserDb.password))
                     .append(" ").append(dbUser.getPassword())
                     .append(String.format(addField, UserDb.email))
@@ -106,8 +106,8 @@ public class UserRepository extends DBRepository<User> {
                     .append(" ").append(dbUser.getBirthday())
                     .append(String.format(whereClauseId, UserDb.id, dbUser.getId()));
             System.out.println(sb);
-//           return update(String.format(update, TableNames.users, UserDb.firstName));
-            return 1;
+            return update(String.format(update, TableNames.users, UserDb.firstName));
+//            return 1;
         } else
             return 0;
     }

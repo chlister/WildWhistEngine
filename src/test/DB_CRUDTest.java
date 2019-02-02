@@ -1,10 +1,8 @@
 import com.wildgroup.db_package.UserRepository;
-import com.wildgroup.user_package.models.Player;
 import com.wildgroup.user_package.models.User;
 import org.junit.Assert;
 import org.junit.Test;
 import java.sql.Date;
-import java.util.*;
 
 /**
  * @author Marc Rohwedder Kær
@@ -20,7 +18,6 @@ public class DB_CRUDTest {
     static private final String date = "%s-%s-%s"; // yyyy-MM-dd
 
 
-    // TODO: UserCreate
     @Test
     public void userCreate() {
         String year = "1990";
@@ -34,21 +31,25 @@ public class DB_CRUDTest {
                 "Tester",
                 "SecurePass!",
                 "sometest@test.org",
-                Date.valueOf(bday));
+                Date.valueOf(bday),
+                0);
 //        System.out.println(u.getPassword());
-        System.out.println("Number of rows affected: " + ur.insertBuilder(u));
+        int rows = ur.insertBuilder(u);
+        System.out.println("Number of rows affected: " + rows);
+        Assert.assertEquals("Zero rows affected.", 1, rows);
     }
-    // TODO: UserUpdate
+
+
     @Test
     public void userUpdate() {
         UserRepository ur = new UserRepository();
         User dbUser = ur.selectUser(1);
-        dbUser.setFirstname("John");
+        dbUser.setFirst_name("John");
         int res = ur.updateUser(dbUser);
         System.out.println(res);
         Assert.assertEquals("Nothing was updated",1, res);
     }
-    // TODO: UserGet
+
     @Test
     public void getUser(){
         UserRepository ur = new UserRepository();
@@ -71,7 +72,8 @@ public class DB_CRUDTest {
                     "Tester",
                     "SecurePass!",
                     "sometest@test.org",
-                    Date.valueOf(bday));
+                    Date.valueOf(bday),
+                    0);
             System.out.println("Number of rows affected: " + ur.insertBuilder(u));
         }
     }
