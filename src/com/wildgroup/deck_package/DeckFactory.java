@@ -13,6 +13,7 @@ public class DeckFactory {
     public static Collection<Card> getStandardDeck(){
         Deck d = new Deck();
         String name, type;
+        int value;
 
         for (int i = 0; i < Suit.values().length; i++){
             for (int j = 1; j < 14; j++){
@@ -33,11 +34,12 @@ public class DeckFactory {
                         default:
                             name = "" + j;
                 }
+                value = j;
 
-                d.getDeck().add(new StandardCard(Suit.values()[i], name + " of " + type));
+                d.getCards().add(new StandardCard(Suit.values()[i], name + " of " + type, value));
 
             }
         }
-        return d.getDeck();
+        return d.getCards();
     }
 }

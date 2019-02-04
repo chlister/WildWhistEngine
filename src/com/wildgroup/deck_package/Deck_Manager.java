@@ -7,7 +7,7 @@ package com.wildgroup.deck_package;
 public class Deck_Manager {
     public static Deck getStandardDeck(){
         Deck d = new Deck();
-        d.setDeck(DeckFactory.getStandardDeck());
+        d.setCards(DeckFactory.getStandardDeck());
         return d;
     }
 }

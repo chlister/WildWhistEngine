@@ -3,29 +3,28 @@ package com.wildgroup.deck_package;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Marc Rohwedder Kær
  * @date 04-02-2019
  */
 public class Deck implements Shufferable {
-    private Collection<Card> deck;
+    private Collection<Card> cards;
 
-    public Collection<Card> getDeck() {
-        return deck;
+    public Collection<Card> getCards() {
+        return cards;
     }
 
-    public void setDeck(Collection<Card> deck) {
-        this.deck = deck;
+    public void setCards(Collection<Card> cards) {
+        this.cards = cards;
     }
 
     @Override
     public void shuffle() {
-        Collections.shuffle((ArrayList)this.deck);
+        Collections.shuffle((ArrayList)this.cards);
     }
 
     public Deck() {
-        this.deck = new ArrayList<>();
+        this.cards = new ArrayList<>();
     }
 }
