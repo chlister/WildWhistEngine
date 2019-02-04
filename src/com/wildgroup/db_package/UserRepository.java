@@ -112,8 +112,6 @@ public class UserRepository extends DBRepository<User> {
             return 0;
     }
 
-    // TODO: selectBuilder -> remember overloads
-
     /**
      * Select a single user via id
      *
