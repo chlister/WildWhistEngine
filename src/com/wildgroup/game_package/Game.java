@@ -2,9 +2,9 @@ package com.wildgroup.game_package;
 
 import com.wildgroup.db_package.dbModels.PlayerEntity;
 import com.wildgroup.deck_package.Deck;
+import com.wildgroup.game_package.models.Player;
 
 import java.util.Collection;
-import java.util.Currency;
 import java.util.HashMap;
 
 /**
@@ -14,14 +14,14 @@ import java.util.HashMap;
 public abstract class Game {
     private final int MAX_PLAYER;
     private final int MIN_PLAYER;
-    private Collection<PlayerEntity> joinedPlayers;
+    private Collection<Player> joinedPlayers;
     private int activePlayer;
     private GameState currentState;
     private String name;
     private Deck deck;
     private Collection<Pile> piles;
     private GameFunctionHandler handler;
-    private HashMap<PlayerEntity, Integer> scoreSet;
+    private HashMap<Player, Integer> scoreSet;
 
     Game(int maxplayer, int minplayer) {
         MAX_PLAYER = maxplayer;
@@ -31,7 +31,7 @@ public abstract class Game {
 
     //region Getters & setters
 
-    public HashMap<PlayerEntity, Integer> getScoreSet() {
+    public HashMap<Player, Integer> getScoreSet() {
         return scoreSet;
     }
 
@@ -59,11 +59,11 @@ public abstract class Game {
         return deck;
     }
 
-    public Collection<PlayerEntity> getJoinedPlayers() {
+    public Collection<Player> getJoinedPlayers() {
         return joinedPlayers;
     }
 
-    public void setJoinedPlayers(Collection<PlayerEntity> joinedPlayers) {
+    public void setJoinedPlayers(Collection<Player> joinedPlayers) {
         this.joinedPlayers = joinedPlayers;
     }
 

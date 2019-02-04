@@ -1,7 +1,7 @@
 package com.wildgroup.game_package;
 
-import com.wildgroup.db_package.dbModels.PlayerEntity;
 import com.wildgroup.deck_package.Card;
+import com.wildgroup.game_package.models.Player;
 
 import java.util.Collection;
 
@@ -11,7 +11,7 @@ import java.util.Collection;
  */
 public class Pile {
     Collection<Card> cardsInPile;
-    Collection<PlayerEntity> pileOwners;
+    Collection<Player> pileOwners;
     boolean visibleForAll;
     boolean visibleForOwner;
 
