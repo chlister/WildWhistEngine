@@ -1,16 +1,19 @@
 package com.wildgroup.websocket_package;
 
 import com.google.gson.Gson;
+import com.wildgroup.db_package.UserRepository;
 import com.wildgroup.message.Message;
 import com.wildgroup.message.MessageMethods;
 import com.wildgroup.message.Model.RoomModel;
 import com.wildgroup.message.Model.ToastLevel;
 import com.wildgroup.message.Model.ToastModel;
+import com.wildgroup.message.Model.UserModel;
 import com.wildgroup.user_package.models.User;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -63,13 +66,39 @@ public class ServerEndPoint {
 
     private boolean checkIfLogin(Session session, Message message) {
         if(message.getMethod() == MessageMethods.CREATEUSER){
-            User newUser = (User)message.getMobject();
+            UserModel newUser = (UserModel)message.getMobject();
 
-            // TODO:Call the Create User method and handel that creation response.
-            //  USER ALREADY EXIST
-            //  USER WAS CREATED
-            //  USER COULD NOT BE CREATE (other reason)
+            UserRepository ur = new UserRepository();
 
+
+            User u = new User(
+                    newUser.getName(),
+                    "",
+                    "",
+                    newUser.getPassword(),
+                    newUser.getEmail(),
+                    (newUser.getBirthday()),
+                    0);
+
+            if(ur.selectUser(u.getEmail())) // checks if user exist
+            {
+                try {
+                    session.getBasicRemote().sendText(new Message(MessageMethods.CREATEUSER, "User with mail already exits").encode()); //TODO: change string
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                int rows = ur.insertBuilder(u);
+                try {
+                    if(rows > 0)
+                        session.getBasicRemote().sendText(new Message(MessageMethods.CREATEUSER, "User was created").encode()); //TODO: change string
+                    else
+                        session.getBasicRemote().sendText(new Message(MessageMethods.CREATEUSER, "User was not created ").encode()); //TODO: change string
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             return false; // no other codes need to be executed
         }
         else if(message.getMethod() == MessageMethods.LOGIN){
