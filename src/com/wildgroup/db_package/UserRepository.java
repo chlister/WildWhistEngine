@@ -131,6 +131,22 @@ public class UserRepository extends DBRepository<User> {
     }
 
     /**
+     * Select a single user via id
+     *
+     * @param email String user email
+     * @return User object
+     * @author Marc Rohwedder Kær
+     * @date 29-01-2019
+     */
+    public User selectUser(String email) {
+        StringBuilder sb = new StringBuilder();
+        // Select + table name
+        sb.append(String.format(select, TableNames.users));
+        sb.append(String.format(whereClauseString, UserDb.email, email));
+        return get(sb.toString());
+    }
+
+    /**
      * Select a single user via column + identifier
      *
      * @param column     UserDb column name

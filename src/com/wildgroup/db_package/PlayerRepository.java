@@ -17,6 +17,12 @@ public class PlayerRepository extends DBRepository<Player> {
             PlayerDb.fk_user_id + " " +
             "VALUES ('%s', '%s', '%d')";
 
+    /**
+     * @author Marc Rohwedder Kær
+     * @date 01-02-2019
+     * @param rs ResultSet
+     * @return
+     */
     @Override
     Player populate(ResultSet rs) {
         Player pl = null;
@@ -28,7 +34,6 @@ public class PlayerRepository extends DBRepository<Player> {
         return pl;
     }
 
-    // TODO: insert player
     public int insertBuilder(Player player) {
         StringBuilder sb = new StringBuilder(
                 String.format(insert,
