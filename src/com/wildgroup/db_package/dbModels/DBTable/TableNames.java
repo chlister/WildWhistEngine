@@ -1,4 +1,4 @@
-package com.wildgroup.db_package;
+package com.wildgroup.db_package.dbModels.DBTable;
 
 /**
  * @author Marc Rohwedder Kær
