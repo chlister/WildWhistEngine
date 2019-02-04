@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.wildgroup.db_package.UserRepository;
 import com.wildgroup.message.Message;
 import com.wildgroup.message.MessageMethods;
+import com.wildgroup.message.MessageResponse;
 import com.wildgroup.message.Model.RoomModel;
 import com.wildgroup.message.Model.ToastLevel;
 import com.wildgroup.message.Model.ToastModel;
@@ -54,7 +55,7 @@ public class ServerEndPoint {
     }
 
     @OnMessage
-    public void handleMessage(String message, Session session) {
+    public void handleMessage(String message, Session session) throws IOException {
         Message myMessage = new Message(message); // this Constructor decode the string message from Json format to a Message object.
         if(checkIfLogin(session, myMessage)){
             // TODO: Call method that handlers all other MessageMethods
@@ -64,7 +65,7 @@ public class ServerEndPoint {
         }
     }
 
-    private boolean checkIfLogin(Session session, Message message) {
+    private boolean checkIfLogin(Session session, Message message) throws IOException {
         if(message.getMethod() == MessageMethods.CREATEUSER){
             UserModel newUser = (UserModel)message.getMobject();
 
@@ -80,45 +81,54 @@ public class ServerEndPoint {
                     (newUser.getBirthday()),
                     0);
 
-            if(ur.selectUser(u.getEmail())) // checks if user exist
+            if(ur.selectUser(u.getEmail()) != null) // checks if user exist
             {
-                try {
-                    session.getBasicRemote().sendText(new Message(MessageMethods.CREATEUSER, "User with mail already exits").encode()); //TODO: change string
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                session.getBasicRemote().sendText(new Message(MessageMethods.CREATEUSER, MessageResponse.CREATEUSER_ALREADY_EXITS).encode());
             }
             else{
                 int rows = ur.insertBuilder(u);
-                try {
-                    if(rows > 0)
-                        session.getBasicRemote().sendText(new Message(MessageMethods.CREATEUSER, "User was created").encode()); //TODO: change string
-                    else
-                        session.getBasicRemote().sendText(new Message(MessageMethods.CREATEUSER, "User was not created ").encode()); //TODO: change string
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                if(rows > 0)
+                    session.getBasicRemote().sendText(new Message(MessageMethods.CREATEUSER, MessageResponse.CREATEUSER_SUCCESS).encode());
+                else
+                    session.getBasicRemote().sendText(new Message(MessageMethods.CREATEUSER, MessageResponse.CREATEUSER_FAILED).encode());
             }
             return false; // no other codes need to be executed
         }
         else if(message.getMethod() == MessageMethods.LOGIN){
-            try {
-                session.getBasicRemote().sendText("Server: Login works "); //TODO: Delete this line
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            User loginUser = (User)message.getMobject();
+            UserModel loginUser = (UserModel) message.getMobject();
+            UserRepository ur;
+            ur = new UserRepository();
 
-            // TODO:Call the read User method and handel response.
-            //  USER DOES NOT EXIST
-            //  USER PASSWORD IS WRONG
-            //  USER EXITS (OK / Continue)
-
-            for(User u : loginUsers) {
-                if (u.getEmail().equals(loginUser.getEmail())) {
-                    // TODO:USER IS ALREADY LOGIN
+            User u = new User(
+                    loginUser.getName(),
+                    "",
+                    "",
+                    loginUser.getPassword(),
+                    loginUser.getEmail(),
+                    (loginUser.getBirthday()),
+                    0);
+            User user = ur.selectUser(u.getEmail());
+                for(User _u : loginUsers) {
+                    if (_u.getEmail().equals(loginUser.getEmail())) { // Checks if user is already log in.
+                        session.getBasicRemote().sendText(new Message(MessageMethods.LOGIN, MessageResponse.LOGIN_ALREADY_LOGIN).encode());
+                        return false;
+                    }
                 }
-            }
+
+                if(user != null) // checks if user exist
+                {
+                    if(user.getPassword().equals(loginUser.getPassword())) // check if user password match
+                        session.getBasicRemote().sendText(new Message(MessageMethods.LOGIN, MessageResponse.LOGIN_SUCCESS).encode());
+                    else {
+                        session.getBasicRemote().sendText(new Message(MessageMethods.LOGIN, MessageResponse.LOGIN_PASSWORD_WRONG).encode());
+                        return false;
+                    }
+
+                }
+                else{
+                    session.getBasicRemote().sendText(new Message(MessageMethods.LOGIN, MessageResponse.LOGIN_FAILED).encode());
+                    return false;
+                }
             // Here we set session properties
             session.getUserProperties().put(SessionPropertie.userMail, loginUser.getEmail()); // this is needed to remove user from loginUsers list when Session is closed.
 
@@ -138,10 +148,10 @@ public class ServerEndPoint {
         return false;
     }
 
-    private void handleMessageMethods(Session session, Message message){
+    private void handleMessageMethods(Session session, Message message) throws IOException {
         switch (message.getMethod()){
             case MessageMethods.CREATEROOM:
-                //TODO: Call CreateRoom Method
+                CreateRoomMethod(session, message);
                 break;
             case MessageMethods.JOINROOM:
                 //TODO: Call JoinRoom method
@@ -155,19 +165,19 @@ public class ServerEndPoint {
         }
     }
 
-    private void CreateRoomMethod(Session session, Message message){
+    private void CreateRoomMethod(Session session, Message message) throws IOException {
         RoomModel room = (RoomModel) message.getMobject();
         for (GameSession gs : gameSessions){
             if(gs.getName().equals(room.getName()));
             {
-                //TODO: ROOM ALREADY EXITS RESPONSE
+                session.getBasicRemote().sendText(new Message(MessageMethods.CREATEROOM, MessageResponse.CREATEUSER_ALREADY_EXITS).encode());
                 return;
             }
         }
         Room newRoom = new Room(room.getName());
         newRoom.AddPlayers(session);
         gameSessions.add(newRoom);
-        // TODO: ROOM HAS BEEN CREATED RESPONSE
+        session.getBasicRemote().sendText(new Message(MessageMethods.CREATEROOM, MessageResponse.CREATEUSER_SUCCESS).encode());
     }
 
     private void JoinRoomMethod(Session session, Message message) throws IOException {
@@ -185,11 +195,11 @@ public class ServerEndPoint {
                     gs.AddSpectator(session);
                     session.getUserProperties().put(SessionPropertie.inRoomAsSpectator, false);
                 }
-                // TODO JOIN ROOM SUCCESS REPSONSE
+                session.getBasicRemote().sendText(new Message(MessageMethods.JOINROOM, MessageResponse.LOGIN_SUCCESS).encode()); // JOIN SUCCESS
                 return;
             }
         }
-        session.getBasicRemote().sendText(new Message(MessageMethods.TOAST, new ToastModel(ToastLevel.ERROR, "Error when trying to join room")).encode());
+        session.getBasicRemote().sendText(new Message(MessageMethods.JOINROOM, MessageResponse.LOGIN_FAILED).encode()); // JOIN FAILED
     }
 
     private void LeaveRoomMethod(Session session){
