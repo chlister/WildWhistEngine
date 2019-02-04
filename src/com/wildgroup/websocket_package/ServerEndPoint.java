@@ -3,6 +3,7 @@ package com.wildgroup.websocket_package;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.wildgroup.db_package.UserRepository;
+import com.wildgroup.db_package.dbModels.UserEntity;
 import com.wildgroup.message.Message;
 import com.wildgroup.message.MessageMethods;
 import com.wildgroup.message.MessageResponse;
@@ -10,7 +11,6 @@ import com.wildgroup.message.Model.RoomModel;
 import com.wildgroup.message.Model.ToastLevel;
 import com.wildgroup.message.Model.ToastModel;
 import com.wildgroup.message.Model.UserModel;
-import com.wildgroup.user_package.models.User;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 @ServerEndpoint("/ws")
 public class ServerEndPoint {
     private ArrayList<GameSession> gameSessions = new ArrayList<>();
-    private ArrayList<User> loginUsers = new ArrayList<>();
+    private ArrayList<UserEntity> loginUsers = new ArrayList<>();
 
     @OnOpen
     public void open(Session session){
@@ -38,7 +38,7 @@ public class ServerEndPoint {
         String loginMail = (String)session.getUserProperties().get(SessionPropertie.userMail);
         if(loginMail != null) {
             if (!loginMail.isEmpty()) {
-                for (User u : loginUsers) {
+                for (UserEntity u : loginUsers) {
                     if (u.getEmail().equals(loginMail)) {
                         loginUsers.remove(u); // removes user from loginUser list.
                         break;
@@ -73,7 +73,7 @@ public class ServerEndPoint {
             UserRepository ur = new UserRepository();
 
 
-            User u = new User(
+            UserEntity u = new UserEntity(
                     newUser.getName(),
                     "",
                     "",
@@ -101,7 +101,7 @@ public class ServerEndPoint {
             UserRepository ur;
             ur = new UserRepository();
 
-            User u = new User(
+            UserEntity u = new UserEntity(
                     loginUser.getName(),
                     "",
                     "",
@@ -109,8 +109,8 @@ public class ServerEndPoint {
                     loginUser.getEmail(),
                     (loginUser.getBirthday()),
                     0);
-            User user = ur.selectUser(u.getEmail());
-                for(User _u : loginUsers) {
+            UserEntity user = ur.selectUser(u.getEmail());
+                for(UserEntity _u : loginUsers) {
                     if (_u.getEmail().equals(loginUser.getEmail())) { // Checks if user is already log in.
                         session.getBasicRemote().sendText(new Message(MessageMethods.LOGIN, MessageResponse.LOGIN_ALREADY_LOGIN).encode());
                         return false;
@@ -140,7 +140,7 @@ public class ServerEndPoint {
         String loginMail = (String)session.getUserProperties().get(SessionPropertie.userMail);
         if(loginMail != null) {
             if (!loginMail.isEmpty()) {
-                for (User u : loginUsers) {
+                for (UserEntity u : loginUsers) {
                     if (u.getEmail().equals(loginMail)) {
                         return true; // user is found in loginUsers list. And method can now be executed.
                     }
