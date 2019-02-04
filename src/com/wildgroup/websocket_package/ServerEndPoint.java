@@ -68,7 +68,7 @@ public class ServerEndPoint {
 
     private boolean checkIfLogin(Session session, Message message) throws IOException {
         if(message.getMethod() == MessageMethods.CREATEUSER){
-            UserModel newUser = (UserModel)message.getMobject();
+            UserModel newUser = UserModel.Deserialize((LinkedTreeMap) message.getMobject());
 
             UserRepository ur = new UserRepository();
 

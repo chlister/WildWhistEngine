@@ -77,7 +77,6 @@ public class UserModel {
 
         public static UserModel Deserialize(LinkedTreeMap ltm){
             UserModel u = new UserModel();
-            u.id = (Integer) ltm.get("id");
             u.name = (String) ltm.get("name");
             u.email = (String) ltm.get("email");
             u.password = (String) ltm.get("password");
