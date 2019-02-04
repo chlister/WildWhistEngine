@@ -1,7 +1,8 @@
 import com.wildgroup.db_package.UserRepository;
-import com.wildgroup.user_package.models.User;
+import com.wildgroup.db_package.dbModels.UserEntity;
 import org.junit.Assert;
 import org.junit.Test;
+
 import java.sql.Date;
 
 /**
@@ -25,7 +26,7 @@ public class DB_CRUDTest {
         String day = "07";
         String bday = String.format(date, year, month, day);
         UserRepository ur = new UserRepository();
-        User u = new User(
+        UserEntity u = new UserEntity(
                 "Test2",
                 "",
                 "Tester",
@@ -43,19 +44,20 @@ public class DB_CRUDTest {
     @Test
     public void userUpdate() {
         UserRepository ur = new UserRepository();
-        User dbUser = ur.selectUser(1);
+        UserEntity dbUser = ur.selectUser(1);
         dbUser.setFirst_name("John");
         int res = ur.updateUser(dbUser);
         System.out.println(res);
-        Assert.assertEquals("Nothing was updated",1, res);
+        Assert.assertEquals("Nothing was updated", 1, res);
     }
 
     @Test
-    public void getUser(){
+    public void getUser() {
         UserRepository ur = new UserRepository();
-        User u = ur.selectUser(11);
-        Assert.assertNotNull("Object couldn't be parsed, or no entries in database",u);
+        UserEntity u = ur.selectUser(1);
+        Assert.assertNotNull("Object couldn't be parsed, or no entries in database", u);
     }
+
     // TODO: MultipleUserCreate
     @Test
     public void multiUserCreate() {
@@ -64,10 +66,10 @@ public class DB_CRUDTest {
         String day = "07";
         String bday = String.format(date, year, month, day);
         UserRepository ur = new UserRepository();
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
 
-            User u = new User(
-                    "Test"+i,
+            UserEntity u = new UserEntity(
+                    "Test" + i,
                     "",
                     "Tester",
                     "SecurePass!",

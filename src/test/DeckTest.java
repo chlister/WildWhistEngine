@@ -29,7 +29,6 @@ public class DeckTest {
         System.out.println("I am shufflin' ");
         d.shuffle();
         d.shuffle();
-        d.shuffle();
         System.out.println(".... Shuffle done!");
         for (Card c: d.getDeck()  ) {
             System.out.println(c.getName());

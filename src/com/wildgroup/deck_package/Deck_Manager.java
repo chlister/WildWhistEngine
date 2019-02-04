@@ -5,4 +5,9 @@ package com.wildgroup.deck_package;
  * @date 28-01-2019
  */
 public class Deck_Manager {
+    public static Deck getStandardDeck(){
+        Deck d = new Deck();
+        d.setDeck(DeckFactory.getStandardDeck());
+        return d;
+    }
 }

@@ -1,6 +1,4 @@
-package com.wildgroup.user_package.models;
-
-import com.wildgroup.db_package.dbModels.EntityObject;
+package com.wildgroup.db_package.dbModels;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
@@ -9,16 +7,17 @@ import java.util.Date;
 
 /**
  * @author Marc Rohwedder Kær
- * @date 29-01-2019
+ * @date 04-02-2019
  */
-public class User extends EntityObject {
+public class UserEntity extends EntityObject {
+
     private String first_name;
     private String middle_name;
     private String last_name;
     private String email;
     private String password;
     private Date birthday;
-    
+
     /**
      * @param first_name String
      * @param middle_name String
@@ -28,7 +27,7 @@ public class User extends EntityObject {
      * @param birthday Date
      * @param id Int
      */
-    public User(String first_name, String middle_name, String last_name, String password, String email, Date birthday, int id) {
+    public UserEntity(String first_name, String middle_name, String last_name, String password, String email, Date birthday, int id) {
         super(id);
         this.first_name = first_name;
         this.middle_name = middle_name;
@@ -37,7 +36,11 @@ public class User extends EntityObject {
         this.email = email;
         this.birthday = birthday;
     }
+    public UserEntity(int id) {
+        super(id);
+    }
 
+    //region Getters & setters
     public String getFirst_name() {
         return first_name;
     }

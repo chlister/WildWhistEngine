@@ -1,7 +1,8 @@
 package com.wildgroup.db_package;
 
-import com.wildgroup.db_package.dbModels.UserDb;
-import com.wildgroup.user_package.models.User;
+import com.wildgroup.db_package.dbModels.DBTable.TableNames;
+import com.wildgroup.db_package.dbModels.DBTable.UserDb;
+import com.wildgroup.db_package.dbModels.UserEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +12,9 @@ import java.util.Collection;
  * @author Marc Rohwedder Kær
  * @date 29-01-2019
  */
-public class UserRepository extends DBRepository<User> {
+
+@SuppressWarnings("StringBufferReplaceableByString")
+public class UserRepository extends DBRepository<UserEntity> {
 
     static private final String values = " (" +
             UserDb.firstName + ", " +
@@ -30,10 +33,10 @@ public class UserRepository extends DBRepository<User> {
      * @return User object
      */
     @Override
-    User populate(ResultSet rs) {
-        User us = null;
+    UserEntity populate(ResultSet rs) {
+        UserEntity us = null;
         try {
-            us = new User(rs.getString(UserDb.firstName),
+            us = new UserEntity(rs.getString(UserDb.firstName),
                     rs.getString(UserDb.middleName),
                     rs.getString(UserDb.lastName),
                     rs.getString(UserDb.password),
@@ -54,7 +57,7 @@ public class UserRepository extends DBRepository<User> {
      * @author Marc Rohwedder Kær
      * @date 29-01-2019
      */
-    public int insertBuilder(User user) {
+    public int insertBuilder(UserEntity user) {
         StringBuilder sb = new StringBuilder(
                 String.format(insert,
                         TableNames.users,
@@ -79,9 +82,9 @@ public class UserRepository extends DBRepository<User> {
      * @date 29-01-2019
      * Update user method - given a user object it will update
      */
-    public int updateUser(User user) {
+    public int updateUser(UserEntity user) {
         // First select the user in the database
-        User dbUser = get(String.format(select, TableNames.users) + String.format(whereClauseId, UserDb.id, user.getId()));
+        UserEntity dbUser = get(String.format(select, TableNames.users) + String.format(whereClauseId, UserDb.id, user.getId()));
         // If user exists update the variables
         if (dbUser != null) {
             dbUser.setEmail(user.getEmail());
@@ -120,7 +123,7 @@ public class UserRepository extends DBRepository<User> {
      * @author Marc Rohwedder Kær
      * @date 29-01-2019
      */
-    public User selectUser(int id) {
+    public UserEntity selectUser(int id) {
         StringBuilder sb = new StringBuilder();
         // Select + table name
         sb.append(String.format(select, TableNames.users));
@@ -136,7 +139,7 @@ public class UserRepository extends DBRepository<User> {
      * @author Marc Rohwedder Kær
      * @date 29-01-2019
      */
-    public User selectUser(String email) {
+    public UserEntity selectUser(String email) {
         StringBuilder sb = new StringBuilder();
         // Select + table name
         sb.append(String.format(select, TableNames.users));
@@ -153,7 +156,7 @@ public class UserRepository extends DBRepository<User> {
      * @author Marc Rohwedder Kær
      * @date 29-01-2019
      */
-    public User selectUser(UserDb column, String identifier) {
+    public UserEntity selectUser(UserDb column, String identifier) {
         StringBuilder sb = new StringBuilder();
         // select table
         sb.append(String.format(select, TableNames.users));
@@ -163,7 +166,7 @@ public class UserRepository extends DBRepository<User> {
         return get(sb.toString());
     }
 
-    public Collection<User> getAllUsers() {
+    public Collection<UserEntity> getAllUsers() {
         return getAll(String.format(select, TableNames.users));
     }
     // TODO: deleteBuilder

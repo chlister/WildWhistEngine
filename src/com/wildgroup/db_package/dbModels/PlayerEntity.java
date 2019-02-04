@@ -1,19 +1,20 @@
-package com.wildgroup.user_package.models;
-
-import com.wildgroup.db_package.dbModels.EntityObject;
+package com.wildgroup.db_package.dbModels;
 
 import java.sql.Blob;
 
 /**
  * @author Marc Rohwedder Kær
- * @date 29-01-2019
+ * @date 04-02-2019
  */
-public class Player extends EntityObject {
+public class PlayerEntity extends EntityObject {
+    public PlayerEntity(int id) {
+        super(id);
+    }
     private String name;
     private Blob avatar;
     private int user_id;
 
-    public Player(int id, String name, Blob avatar, int user_id) {
+    public PlayerEntity(int id, String name, Blob avatar, int user_id) {
         super(id);
         this.name = name;
         this.avatar = avatar;
