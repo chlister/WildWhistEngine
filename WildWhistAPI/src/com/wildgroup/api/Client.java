@@ -1,6 +1,7 @@
 package com.wildgroup.api;
 
 import com.wildgroup.message.Message;
+import com.wildgroup.message.Model.RoomModel;
 import com.wildgroup.message.Model.UserModel;
 import com.wildgroup.message.MessageMethods;
 
@@ -47,6 +48,12 @@ public class Client {
     {
         UserModel userModel = new UserModel(username, email, password, new Date());
         Message message = new Message(MessageMethods.CREATEUSER, userModel);
+        clientEndPoint.sendMessage(message.encode());
+    }
+
+    public void createRoom(String name){
+        RoomModel roomModel = new RoomModel(name, 2, 0, "Test", false);
+        Message message = new Message(MessageMethods.JOINROOM, roomModel);
         clientEndPoint.sendMessage(message.encode());
     }
 }

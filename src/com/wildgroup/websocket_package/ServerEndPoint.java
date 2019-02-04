@@ -1,6 +1,7 @@
 package com.wildgroup.websocket_package;
 
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import com.wildgroup.db_package.UserRepository;
 import com.wildgroup.message.Message;
 import com.wildgroup.message.MessageMethods;
@@ -33,7 +34,7 @@ public class ServerEndPoint {
     }
 
     @OnClose
-    public void close(Session session) {
+    public void close(Session session) throws IOException {
         String loginMail = (String)session.getUserProperties().get(SessionPropertie.userMail);
         if(loginMail != null) {
             if (!loginMail.isEmpty()) {
@@ -58,7 +59,7 @@ public class ServerEndPoint {
     public void handleMessage(String message, Session session) throws IOException {
         Message myMessage = new Message(message); // this Constructor decode the string message from Json format to a Message object.
         if(checkIfLogin(session, myMessage)){
-            // TODO: Call method that handlers all other MessageMethods
+            handleMessageMethods(session, myMessage);
         }
         else{
             //TODO: User is not log in response
@@ -95,7 +96,8 @@ public class ServerEndPoint {
             return false; // no other codes need to be executed
         }
         else if(message.getMethod() == MessageMethods.LOGIN){
-            UserModel loginUser = (UserModel) message.getMobject();
+            UserModel loginUser =  UserModel.Deserialize((LinkedTreeMap) message.getMobject());
+
             UserRepository ur;
             ur = new UserRepository();
 
@@ -154,10 +156,10 @@ public class ServerEndPoint {
                 CreateRoomMethod(session, message);
                 break;
             case MessageMethods.JOINROOM:
-                //TODO: Call JoinRoom method
+                JoinRoomMethod(session, message);
                 break;
             case MessageMethods.LEAVEROOM:
-                //TODO: Call LeaveRoom method
+                JoinRoomMethod(session, message);
                 break;
             default:
                 //TODO: Method not found error
@@ -202,7 +204,7 @@ public class ServerEndPoint {
         session.getBasicRemote().sendText(new Message(MessageMethods.JOINROOM, MessageResponse.LOGIN_FAILED).encode()); // JOIN FAILED
     }
 
-    private void LeaveRoomMethod(Session session){
+    private void LeaveRoomMethod(Session session) throws IOException {
         String inRoom = (String)session.getUserProperties().get(SessionPropertie.inRoom);
         boolean inRoomAsSpectator = (boolean)session.getUserProperties().get(SessionPropertie.inRoomAsSpectator);
         if(inRoom != null) {
@@ -214,6 +216,12 @@ public class ServerEndPoint {
                             gs.RemoveSpectator(session);
                         else {
                             gs.RemovePlayers(session);
+                            for (Session spectator: gs.getSpectators()) {
+                                spectator.getBasicRemote().sendText(new Message(MessageMethods.TOAST, new ToastModel(ToastLevel.INFO,  "Somebody has left the room")).encode()); //TODO: Change message
+                            }
+                            for (Session player: gs.getPlayers()) {
+                                player.getBasicRemote().sendText(new Message(MessageMethods.TOAST, new ToastModel(ToastLevel.INFO,  "Somebody has left the room")).encode()); //TODO: Change message
+                            }
                             //TODO: call a Player has left room method & Reponse to client that room has been left
                         }
                         session.getUserProperties().remove(SessionPropertie.inRoomAsSpectator);

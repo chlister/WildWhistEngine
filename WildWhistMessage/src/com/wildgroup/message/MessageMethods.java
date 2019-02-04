@@ -1,5 +1,10 @@
 package com.wildgroup.message;
 
+/**
+ * @author Martin Juul Johansen
+ * @date 04/02/2019
+ */
+
 public class MessageMethods {
     // User methods
     static public final int CREATEUSER = 1 ; // from API;

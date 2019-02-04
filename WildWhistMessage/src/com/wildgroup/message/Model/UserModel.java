@@ -1,6 +1,13 @@
 package com.wildgroup.message.Model;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.util.Date;
+
+/**
+ * @author Martin Juul Johansen
+ * @date 04/02/2019
+ */
 
 public class UserModel {
         private int id;
@@ -9,7 +16,19 @@ public class UserModel {
         private String password;
         private Date birthday;
 
-        public UserModel(String name, String email, String password, Date birthday) {
+    public UserModel() {
+
+    }
+
+    public UserModel(String name, String email, String password, Date birthday) {
+            this.name = name;
+            this.email = email;
+            this.password = password;
+            this.birthday = birthday;
+        }
+
+        public UserModel(int id, String name, String email, String password, Date birthday) {
+            this.id = id;
             this.name = name;
             this.email = email;
             this.password = password;
@@ -54,6 +73,15 @@ public class UserModel {
 
         public void setBirthday(Date birthday) {
             this.birthday = birthday;
+        }
+
+        public static UserModel Deserialize(LinkedTreeMap ltm){
+            UserModel u = new UserModel();
+            u.id = (Integer) ltm.get("id");
+            u.name = (String) ltm.get("name");
+            u.email = (String) ltm.get("email");
+            u.password = (String) ltm.get("password");
+            return  u;
         }
 
 }

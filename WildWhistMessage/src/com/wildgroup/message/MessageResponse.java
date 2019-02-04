@@ -1,5 +1,10 @@
 package com.wildgroup.message;
 
+/**
+ * @author Martin Juul Johansen
+ * @date 04/02/2019
+ */
+
 public class MessageResponse {
     static public final int CREATEUSER_SUCCESS = 1 ;
     static public final int CREATEUSER_ALREADY_EXITS = 2 ;
