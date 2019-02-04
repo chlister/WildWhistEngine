@@ -1,6 +1,6 @@
 package com.wildgroup.game_package;
 
-import com.wildgroup.db_package.EntityObject;
+import com.wildgroup.db_package.dbModels.EntityObject;
 
 /**
  * @author Marc Rohwedder Kær
@@ -8,6 +8,11 @@ import com.wildgroup.db_package.EntityObject;
  */
 public class Game extends EntityObject {
     private String name;
+
+    public Game(int id, String name) {
+        super(id);
+        this.name = name;
+    }
 
     public String getName() {
         return name;

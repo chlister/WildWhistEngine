@@ -15,7 +15,7 @@ public class DbConnection {
     public DbConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/wildgameenginedb?user=wilduser&password=wildwhist");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/wildgameenginedb?&useLegacyDatetimeCode=false&serverTimezone=GMT","wilduser", "wildwhist");
         }catch (Exception e){
             e.printStackTrace();
         }
