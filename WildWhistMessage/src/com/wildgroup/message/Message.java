@@ -16,7 +16,13 @@ public class Message {
     }
 
     public Message(String json){
-        Message m = new Gson().fromJson(json, Message.class);
+        Message m = new Message(0, null);
+        try {
+            m = new Gson().fromJson(json, Message.class);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         this.method = m.method;
         this.mObject = m.mObject;
     }

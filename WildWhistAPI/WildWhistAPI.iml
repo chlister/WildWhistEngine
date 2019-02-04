@@ -21,5 +21,6 @@
     </orderEntry>
     <orderEntry type="library" name="tyrus-standalone-client-1.9" level="project" />
     <orderEntry type="library" name="WildWhistMessage (API)" level="project" />
+    <orderEntry type="library" name="gson-2.8.5 (API)" level="project" />
   </component>
 </module>

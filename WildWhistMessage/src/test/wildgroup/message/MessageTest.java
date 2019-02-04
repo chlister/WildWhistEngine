@@ -1,4 +1,4 @@
-package test.wildgroup.api;
+package test.wildgroup.message;
 
 import com.wildgroup.message.Message;
 import org.junit.*;

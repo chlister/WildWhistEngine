@@ -37,5 +37,7 @@
     </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="mysql-connector-java-8.0.14" level="project" />
     <orderEntry type="library" name="WildWhistMessage" level="project" />
+    <orderEntry type="module" module-name="WildWhistMessage" />
+    <orderEntry type="library" name="gson-2.8.5 (Server)" level="project" />
   </component>
 </module>
