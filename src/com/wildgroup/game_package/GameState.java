@@ -6,5 +6,6 @@ package com.wildgroup.game_package;
  */
 public enum GameState {
     PLAYING,
-    WAITING
+    WAITING,
+    CALLROUND
 }

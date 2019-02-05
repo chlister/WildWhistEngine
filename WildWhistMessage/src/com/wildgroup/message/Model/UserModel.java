@@ -16,16 +16,6 @@ public class UserModel {
         private String password;
         private Date birthday;
 
-    public UserModel() {
-
-    }
-
-    public UserModel(String name, String email, String password, Date birthday) {
-            this.name = name;
-            this.email = email;
-            this.password = password;
-            this.birthday = birthday;
-        }
 
         public UserModel(int id, String name, String email, String password, Date birthday) {
             this.id = id;
@@ -76,10 +66,14 @@ public class UserModel {
         }
 
         public static UserModel Deserialize(LinkedTreeMap ltm){
-            UserModel u = new UserModel();
-            u.name = (String) ltm.get("name");
-            u.email = (String) ltm.get("email");
-            u.password = (String) ltm.get("password");
+            double d = (double)ltm.get("id");
+            UserModel u = new UserModel(
+                    (int) d ,
+                    (String) ltm.get("name"),
+                    (String) ltm.get("email"),
+                    (String) ltm.get("password"),
+                    new Date()
+            );
             return  u;
         }
 

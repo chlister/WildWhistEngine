@@ -35,6 +35,10 @@ public abstract class Game {
         return scoreSet;
     }
 
+    public void setScoreSet(HashMap<Player, Integer> scoreSet) {
+        this.scoreSet = scoreSet;
+    }
+
     public void setHandler(GameFunctionHandler handler) {
         this.handler = handler;
     }
@@ -59,6 +63,10 @@ public abstract class Game {
         return deck;
     }
 
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+
     public Collection<Player> getJoinedPlayers() {
         return joinedPlayers;
     }
@@ -78,6 +86,13 @@ public abstract class Game {
     public Collection<Pile> getPiles() {
         return piles;
     }
+    public Pile getPile(int i) {
+        for(Pile p: getPiles()){
+            if(p.getPileOwner() == i)
+                return p;
+        }
+        return null;
+    }
 
     public void setPiles(Collection<Pile> piles) {
         this.piles = piles;
@@ -85,4 +100,8 @@ public abstract class Game {
     //endregion
 
     abstract void play();
+
+    abstract boolean winningCondition();
+
+    abstract void initPiles();
 }

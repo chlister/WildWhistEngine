@@ -10,7 +10,7 @@ public class DeckFactory {
 
 
 
-    public static Collection<Card> getStandardDeck(){
+    public static Deck getStandardDeck(){
         Deck d = new Deck();
         String name, type;
         int value;
@@ -40,6 +40,6 @@ public class DeckFactory {
 
             }
         }
-        return d.getCards();
+        return d;
     }
 }
