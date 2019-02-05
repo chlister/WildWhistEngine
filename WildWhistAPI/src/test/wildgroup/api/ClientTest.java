@@ -71,7 +71,7 @@ public class ClientTest {
                     response[0] = 2;
             }
         });
-        c.createUser("kagehak@gmail.com", "martin", "01234");
+        c.createRoom("AwesomeRoom");
         while(response[0] < 2){
 
         }
@@ -93,7 +93,7 @@ public class ClientTest {
                     response[0] = 2;
             }
         });
-        c.createUser("kagehak@gmail.com", "martin", "01234");
+        c.joinRoom("AwesomeRoom");
         while(response[0] < 2){
 
         }
