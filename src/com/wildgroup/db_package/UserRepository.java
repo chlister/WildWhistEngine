@@ -109,7 +109,7 @@ public class UserRepository extends DBRepository<UserEntity> {
                     .append(" ").append(dbUser.getBirthday())
                     .append(String.format(whereClauseId, UserDb.id, dbUser.getId()));
             System.out.println(sb);
-            return update(String.format(update, TableNames.users, UserDb.firstName));
+            return update(sb.toString());
 //            return 1;
         } else
             return 0;

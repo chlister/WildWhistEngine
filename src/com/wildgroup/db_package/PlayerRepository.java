@@ -5,6 +5,7 @@ import com.wildgroup.db_package.dbModels.DBTable.TableNames;
 import com.wildgroup.db_package.dbModels.PlayerEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 
 /**
  * @author Marc Rohwedder Kær
@@ -34,7 +35,7 @@ public class PlayerRepository extends DBRepository<PlayerEntity> {
         }
         return pl;
     }
-
+// TODO: comment all
     public int insertBuilder(PlayerEntity player) {
         StringBuilder sb = new StringBuilder(
                 String.format(insert,
@@ -47,7 +48,39 @@ public class PlayerRepository extends DBRepository<PlayerEntity> {
         System.out.println(sb);
         return insert(sb.toString());
     }
-    // TODO: update player
-    // TODO: select player
+
+    public int updatePlayer(PlayerEntity player){
+        PlayerEntity dbPlayer = get(String.format(select, TableNames.player) + String.format(whereClauseId, PlayerDb.id, player.getId()));
+        // If user exists update the variables
+        if (dbPlayer != null) {
+            dbPlayer.setName(player.getName());
+            dbPlayer.setAvatar(player.getAvatar());
+            StringBuilder sb = new StringBuilder();
+            sb
+                    .append(String.format(update, TableNames.player, PlayerDb.name))
+                    .append(" ").append(dbPlayer.getName())
+                    .append(String.format(addField, PlayerDb.avatar))
+                    .append(" ").append(dbPlayer.getAvatar())
+                    .append(String.format(whereClauseId, PlayerDb.id, dbPlayer.getId()));
+
+            System.out.println(sb);
+            return update(sb.toString());
+//            return 1;
+        } else
+            return 0;
+    }
+
+    public PlayerEntity selectUser(int id) {
+        StringBuilder sb = new StringBuilder();
+        // Select + table name
+        sb.append(String.format(select, TableNames.player));
+        sb.append(String.format(whereClauseId, PlayerDb.id, id));
+        return get(sb.toString());
+    }
+
+    public Collection<PlayerEntity> getAllUsers() {
+        return getAll(String.format(select, TableNames.player));
+    }
+
     // TODO: delete player
 }
