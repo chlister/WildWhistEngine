@@ -6,6 +6,7 @@ import com.wildgroup.deck_package.StandardCard;
 import com.wildgroup.deck_package.Suit;
 import com.wildgroup.game_package.models.Player;
 
+import javax.swing.plaf.synth.Region;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -63,7 +64,9 @@ public class Whist extends Game implements DealerToken {
         for (int i = 0 ; i < size; i++){
             for (int j = 0 ; j < this.getMAX_PLAYER(); j++){
                 //TODO: Refactor this line, Add Pop override to Deck
+                //region Perfection
                 ((Pile) ((ArrayList) getPiles()).get(j)).getCardsInPile().add(((Card) ((Stack) getDeck().getCards()).pop()));
+                //endregion
             }
         }
     }

@@ -20,7 +20,7 @@ public class DeckTest {
     @Test
     public void shuffleDeck(){
         Deck d = new Deck();
-        d.setCards(DeckFactory.getStandardDeck());
+        d = (DeckFactory.getStandardDeck());
         Deck shuff = new Deck();
 
         shuff.shuffle();
