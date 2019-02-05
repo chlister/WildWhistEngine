@@ -8,25 +8,26 @@ package com.wildgroup.deck_package;
 public class StandardCard extends Card {
 
     private Suit suit;
-    private byte value;
+    private int value;
 
-    //region Description
+    //region Description getter & setter
     public Suit getSuit() {
         return suit;
     }
 
-    public byte getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(byte value) {
+    public void setValue(int value) {
         this.value = value;
     }
     //endregion
 
-    public StandardCard(Suit suit, String name) {
+    public StandardCard(Suit suit, String name, int value) {
         super(name);
-
+        this.suit = suit;
+        this.value = value;
     }
 
 }
