@@ -11,7 +11,7 @@ import java.util.HashMap;
  * @author Marc Rohwedder Kær
  * @date 29-01-2019
  */
-public abstract class Game {
+public abstract class Game implements Runnable {
     private final int MAX_PLAYER;
     private final int MIN_PLAYER;
     private Collection<Player> joinedPlayers;
@@ -41,6 +41,10 @@ public abstract class Game {
 
     public void setHandler(GameFunctionHandler handler) {
         this.handler = handler;
+    }
+
+    GameFunctionHandler getHandler() {
+        return handler;
     }
 
     public int getMAX_PLAYER() {
@@ -99,7 +103,7 @@ public abstract class Game {
     }
     //endregion
 
-    abstract void play();
+    abstract void play() throws InterruptedException;
 
     abstract boolean winningCondition();
 

@@ -7,30 +7,42 @@ import com.wildgroup.deck_package.Suit;
 import com.wildgroup.game_package.models.Player;
 
 import javax.swing.plaf.synth.Region;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Stack;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * @author Marc Rohwedder Kær, Dennis F. J. Dupont
  * @date 04-02-2019
  */
 public class Whist extends Game implements DealerToken {
+    @Override
+    public void run() {
+        //TODO: Wait for Play Condition
+        try {
+            play();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     enum calls {
-        GRANDI,
-        SOL,
         GRAND,
+        SOL,
+        GRANDI,
         PAS
     }
 
     private Suit trump;
     private int currentCall;
     private int currentDealer;
+    public GameState currentState;
+    int callResponse;
 
     public Whist() {
         super(4, 4);
         this.setDeck(DeckFactory.getStandardDeck());
+        currentDealer = 0;
+        setActivePlayer(currentDealer + 1);
 
     }
 
@@ -49,20 +61,80 @@ public class Whist extends Game implements DealerToken {
     //endregion
 
     @Override
-    void play() {
+    public void play() throws InterruptedException {
 // TODO: make work
         setScoreSet(initScore());
         while (winningCondition()) {
             this.getDeck().shuffle();
             deal();
+            callRound();
+            startRound();
         }
         System.out.println("Doesn't work");
     }
 
+    private void startRound() {
+
+    }
+
+    private void callRound() throws InterruptedException {
+        currentState = GameState.CALLROUND;
+        int[] intArray = new int[this.getMAX_PLAYER()];
+        Arrays.fill(intArray, 0);
+        String[] theCall = new String[calls.values().length];
+        int index = 0;
+
+        for (calls c : calls.values()
+        ) {
+            theCall[index++] = c.name();
+        }
+
+        while (currentState == GameState.CALLROUND) {
+            //Checks if everyone choose Pass
+            if (Arrays.equals(intArray, new int[]{3, 3, 3, 3})) {
+                //Checks if player have chosen a call
+                if (intArray[getActivePlayer()] != 3) {
+                    getHandler().selectFromArray(theCall, ((Player) ((ArrayList) getJoinedPlayers()).get(getActivePlayer())));
+                    wait();
+                    int responseIndex = callResponse; //TODO: Replace with response from server
+                    //Checks if a player choose Grandi
+
+                    switch (responseIndex) {
+
+                        case 0: //If Player Chooses Grand
+                            theCall = Arrays.copyOfRange(theCall, responseIndex + 1, theCall.length);
+                            break;
+
+                        case 1: //If Player Chooses Sol
+                            theCall = Arrays.copyOfRange(theCall, responseIndex, theCall.length);
+                            break;
+
+                        case 2: //If Player Chooses Grandi
+                            currentState = GameState.PLAYING;
+                            currentCall = responseIndex;
+                            break;
+                    }
+
+                    intArray[getActivePlayer()] = responseIndex;
+
+                    if (getActivePlayer() < this.getMAX_PLAYER() - 1)
+                        setActivePlayer(getActivePlayer() + 1);
+                    else
+                        setActivePlayer(0);
+                }
+            } else {
+                currentState = GameState.PLAYING;
+                currentCall = 3;
+            }
+        }
+
+
+    }
+
     private void deal() {
         int size = getDeck().getCards().size();
-        for (int i = 0 ; i < size; i++){
-            for (int j = 0 ; j < this.getMAX_PLAYER(); j++){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < this.getMAX_PLAYER(); j++) {
                 //TODO: Refactor this line, Add Pop override to Deck
                 //region Perfection
                 ((Pile) ((ArrayList) getPiles()).get(j)).getCardsInPile().add(((Card) ((Stack) getDeck().getCards()).pop()));
@@ -80,10 +152,10 @@ public class Whist extends Game implements DealerToken {
     @Override
     void initPiles() {
         setPiles(new ArrayList<>());
-        for(int i = 0; i < 4; i++){
-            getPiles().add(new Pile(new ArrayList<>(),i,false,true));
+        for (int i = 0; i < 4; i++) {
+            getPiles().add(new Pile(new ArrayList<>(), i, false, true));
         }
-        getPiles().add(new Pile(new ArrayList<>(),5,true,true));
+        getPiles().add(new Pile(new ArrayList<>(), 5, true, true));
 
     }
 
@@ -119,5 +191,10 @@ public class Whist extends Game implements DealerToken {
             hm.put(p, 0);
         }
         return hm;
+    }
+
+    void setCallResponse(int i){
+        callResponse = i;
+        notify();
     }
 }
