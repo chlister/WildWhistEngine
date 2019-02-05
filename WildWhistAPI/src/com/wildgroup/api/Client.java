@@ -39,19 +39,25 @@ public class Client {
 
 
     public void login(String email, String password){
-        UserModel userModel = new UserModel("", email, password, new Date());
+        UserModel userModel = new UserModel(0, "", email, password, new Date());
         Message message = new Message(MessageMethods.LOGIN, userModel);
         clientEndPoint.sendMessage(message.encode());
     }
 
     public void createUser(String email, String username, String password)//TODO: Add birthday to method;
     {
-        UserModel userModel = new UserModel(username, email, password, new Date());
+        UserModel userModel = new UserModel(0, username, email, password, new Date());
         Message message = new Message(MessageMethods.CREATEUSER, userModel);
         clientEndPoint.sendMessage(message.encode());
     }
 
     public void createRoom(String name){
+        RoomModel roomModel = new RoomModel(name, 2, 0, "Test", false);
+        Message message = new Message(MessageMethods.CREATEROOM, roomModel);
+        clientEndPoint.sendMessage(message.encode());
+    }
+
+    public  void joinRoom(String name){
         RoomModel roomModel = new RoomModel(name, 2, 0, "Test", false);
         Message message = new Message(MessageMethods.JOINROOM, roomModel);
         clientEndPoint.sendMessage(message.encode());
