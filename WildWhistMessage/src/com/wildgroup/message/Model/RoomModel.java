@@ -14,15 +14,6 @@ public class RoomModel {
     private String gameName;
     private boolean isSpectator;
 
-    public RoomModel(){
-
-    }
-
-    public RoomModel(String name, boolean isSpectator){
-        this.name = name;
-        this.isSpectator = isSpectator;
-    }
-
     public RoomModel(String name, int maxPlayer, int currentJoined, String gameName, boolean isSpectator) {
         this.name = name;
         this.maxPlayer = maxPlayer;
@@ -52,10 +43,15 @@ public class RoomModel {
     }
 
     public static RoomModel Deserialize(LinkedTreeMap ltm){
-        RoomModel u = new RoomModel();
-        u.name = (String) ltm.get("name");
-        u.gameName = (String) ltm.get("gameName");
-        u.isSpectator = (boolean) ltm.get("isSpectator");
+        double d = (double)ltm.get("maxPlayer");
+        double d2 = (double)ltm.get("currentJoined");
+        RoomModel u = new RoomModel(
+                (String) ltm.get("name"),
+                (int) d,
+                (int) d2,
+                (String) ltm.get("gameName"),
+                (boolean) ltm.get("isSpectator")
+        );
         return u;
     }
 }
