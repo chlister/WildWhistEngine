@@ -1,5 +1,6 @@
 package com.wildgroup.game_package;
 
+import com.sun.xml.internal.bind.api.impl.NameConverter;
 import com.wildgroup.deck_package.Card;
 import com.wildgroup.deck_package.DeckFactory;
 import com.wildgroup.deck_package.StandardCard;
@@ -12,7 +13,7 @@ import java.util.*;
  * @author Marc Rohwedder Kær, Dennis F. J. Dupont
  * @date 04-02-2019
  */
-public class Whist extends Game implements DealerToken {
+public class Whist extends Game implements DealerToken, GameFunctionRespondable {
     @Override
     public void run() {
         //TODO: Wait for Play Condition
@@ -79,7 +80,7 @@ public class Whist extends Game implements DealerToken {
         }
     }
 
-    private void startRound() {
+    private void startRound() throws InterruptedException {
         switch (calls.values()[currentCall]) {
             case SOL:
                 setAceValue(true);
@@ -100,16 +101,14 @@ public class Whist extends Game implements DealerToken {
         }
     }
 
-    private void solRound() {
+    private void solRound() throws InterruptedException {
         //Player Chooses card
         //Next Player
-        //Player Chooses card
-        //Next Player
-        //Player Chooses card
-        //Next Player
-        //Player Chooses card
-        //Next Player
-
+        do {
+            getHandler().selectACard(getActivePlayer());
+            waiter.wait();
+        }
+        while (currentState == GameState.PLAYING);
 
     }
 
@@ -120,8 +119,6 @@ public class Whist extends Game implements DealerToken {
     private void grandOrDiRound(boolean di) {
 
     }
-
-
 
 
     private void callRound() throws InterruptedException {
@@ -228,7 +225,6 @@ public class Whist extends Game implements DealerToken {
     }
 
     /**
-     *
      * @param isSol is the current GameMode Sol?
      */
     void setAceValue(boolean isSol) {
@@ -250,10 +246,45 @@ public class Whist extends Game implements DealerToken {
         return hm;
     }
 
+    @Override
     public void setCallResponse(int i) {
         callResponse = i;
         synchronized (waiter) {
             waiter.notify();
+        }
+    }
+
+    @Override
+    public void selectedCardResponse(int seatId, Card card) {
+        StandardCard selected = (StandardCard) card;
+        synchronized (waiter) {
+            if (((ArrayList<Pile>) getPiles()).get(4).getCardsInPile().isEmpty()) {
+                updateCardAndNotify(seatId, selected);
+            } else {
+                Card firstCard = ((Card) ((ArrayList) ((ArrayList<Pile>) getPiles()).get(4).getCardsInPile()).get(0));
+                if (((StandardCard) firstCard).getSuit() != selected.getSuit()) {
+                    for (Card c : ((ArrayList<Pile>) getPiles()).get(seatId).getCardsInPile()) {
+                        if (((StandardCard) c).getSuit().equals(selected.getSuit())) {
+                            getHandler().selectACard(seatId);
+                            return;
+                        }
+                    }
+                    updateCardAndNotify(seatId, selected);
+                } else {
+                    updateCardAndNotify(seatId, selected);
+                }
+            }
+        }
+
+    }
+
+    private void updateCardAndNotify(int seatId, StandardCard card) {
+        synchronized (waiter) {
+            ((ArrayList<Pile>) getPiles()).get(4).getCardsInPile().add(card);
+            ((ArrayList<Pile>) getPiles()).get(seatId).getCardsInPile().remove(card);
+            //TODO: Update Pile for Seat
+            waiter.notify();
+
         }
     }
 }
