@@ -18,7 +18,9 @@ public class Whist extends Game implements DealerToken {
         //TODO: Wait for Play Condition
         try {
             System.out.println("Hello");
-            play();
+            synchronized (waiter) {
+                play();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -66,18 +68,61 @@ public class Whist extends Game implements DealerToken {
 // TODO: make work
         setScoreSet(initScore());
         initPiles();
-        while (winningCondition()) {
+        boolean done = true;
+        while (done) {
             this.getDeck().shuffle();
             deal();
             callRound();
             startRound();
+            done = false;
+
         }
-        System.out.println("Doesn't work");
     }
 
     private void startRound() {
+        switch (calls.values()[currentCall]) {
+            case SOL:
+                setAceValue(true);
+                solRound();
+                break;
+            case PAS:
+                setAceValue(false);
+                passRound();
+                break;
+            case GRAND:
+                setAceValue(false);
+                grandOrDiRound(false);
+                break;
+            case GRANDI:
+                setAceValue(false);
+                grandOrDiRound(true);
+                break;
+        }
+    }
+
+    private void solRound() {
+        //Player Chooses card
+        //Next Player
+        //Player Chooses card
+        //Next Player
+        //Player Chooses card
+        //Next Player
+        //Player Chooses card
+        //Next Player
+
 
     }
+
+    private void passRound() {
+
+    }
+
+    private void grandOrDiRound(boolean di) {
+
+    }
+
+
+
 
     private void callRound() throws InterruptedException {
         currentState = GameState.CALLROUND;
@@ -115,19 +160,21 @@ public class Whist extends Game implements DealerToken {
                         case 2: //If Player Chooses Grandi
                             currentState = GameState.PLAYING;
                             currentCall = responseIndex;
+                            getHandler().messageDebug("It works");
                             break;
                     }
 
                     intArray[getActivePlayer()] = responseIndex;
-
-                    if (getActivePlayer() < this.getMAX_PLAYER() - 1)
-                        setActivePlayer(getActivePlayer() + 1);
-                    else
-                        setActivePlayer(0);
+                    if (currentState == GameState.CALLROUND)
+                        if (getActivePlayer() < this.getMAX_PLAYER() - 1)
+                            setActivePlayer(getActivePlayer() + 1);
+                        else
+                            setActivePlayer(0);
                 }
             } else {
                 currentState = GameState.PLAYING;
                 currentCall = 3;
+                getHandler().messageDebug("It works");
             }
         }
 
@@ -140,18 +187,19 @@ public class Whist extends Game implements DealerToken {
             for (int j = 0; j < this.getMAX_PLAYER(); j++) {
                 //TODO: Refactor this line, Add Pop override to Deck
                 //region Perfection
-//                ((Pile) ((Vector) getPiles()).get(j)).getCardsInPile().add(((Card) ((Stack) getDeck().getCards()).pop()));
-                //endregion
-                ((Pile)((ArrayList) getPiles()).get(j)).getCardsInPile().add((Card)((ArrayList)getDeck().getCards()).get(0));
+                ((Pile) ((ArrayList) getPiles()).get(j)).getCardsInPile().add((Card) ((ArrayList) getDeck().getCards()).get(0));
                 ((ArrayList<Card>) getDeck().getCards()).remove(0);
+                //endregion
+
             }
         }
     }
 
     @Override
     boolean winningCondition() {
-
         return true;
+
+
     }
 
     @Override
@@ -179,6 +227,10 @@ public class Whist extends Game implements DealerToken {
 
     }
 
+    /**
+     *
+     * @param isSol is the current GameMode Sol?
+     */
     void setAceValue(boolean isSol) {
         // if ace is value 1
         for (Card c : this.getDeck().getCards()) {
@@ -198,8 +250,10 @@ public class Whist extends Game implements DealerToken {
         return hm;
     }
 
-   public void setCallResponse(int i){
+    public void setCallResponse(int i) {
         callResponse = i;
-        waiter.notify();
+        synchronized (waiter) {
+            waiter.notify();
+        }
     }
 }

@@ -9,7 +9,7 @@ import java.util.Collection;
  * @author Marc Rohwedder Kær, Dennis F. J. Dupont
  * @date 04-02-2019
  */
-class Pile {
+public class Pile {
     private Collection<Card> cardsInPile;
     private int pileOwner;
     private boolean visibleForAll;

@@ -1,7 +1,9 @@
 import com.wildgroup.game_package.Game;
 import com.wildgroup.game_package.GameFunctionHandler;
+import com.wildgroup.game_package.Pile;
 import com.wildgroup.game_package.Whist;
 import com.wildgroup.game_package.models.Player;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -21,20 +23,9 @@ public class WhistTest {
         arr[1] = 0;
         Whist g = new Whist();
         Thread t = new Thread(g);
-        Thread resp = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("I am hella fast");
-                g.setCallResponse(arr[0] + (4-arr[1]));
-            }
-        });
+
         Collection<Player> playerCol = new ArrayList<>();
-        (playerCol).add(new Player("Martin", 0));
+        (playerCol).add(new Player("Martin Dealer", 0));
         (playerCol).add(new Player("Marc", 1));
         (playerCol).add(new Player("Dennis", 2));
         (playerCol).add(new Player("Mikkel", 3));
@@ -46,9 +37,20 @@ public class WhistTest {
                 System.out.println("User " + p.getName() + " is picking");
                 Random r = new Random();
                 arr[0] = r.nextInt(stringArray.length - 1);
-                arr[1] = r.nextInt(stringArray.length);
+                arr[1] = stringArray.length;
 
                 System.out.println("User " + p.getName() + " picked " + stringArray[arr[0]]);
+                Thread resp = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        g.setCallResponse(arr[0] + (4-arr[1]));
+                    }
+                });
                 resp.start();
             }
 
@@ -59,6 +61,18 @@ public class WhistTest {
 
             @Override
             public void messageDebug(String message) {
+                Assert.assertEquals("I Expected value to be \"It Works\" but it was: " + message, "It works", message);
+                System.out.println("Does");
+                return;
+            }
+
+            @Override
+            public void selectACard(int seatId) {
+
+            }
+
+            @Override
+            public void dealCards(Collection<Pile> piles) {
 
             }
         });
