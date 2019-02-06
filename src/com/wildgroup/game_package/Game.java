@@ -20,7 +20,7 @@ public abstract class Game implements Runnable {
     private Deck deck;
     private Collection<Pile> piles;
     private GameFunctionHandler handler;
-    private HashMap<Player, Integer> scoreSet;
+    private HashMap<Integer, Integer> scoreSet;
 
     Game(int maxplayer, int minplayer) {
         MAX_PLAYER = maxplayer;
@@ -30,11 +30,11 @@ public abstract class Game implements Runnable {
 
     //region Getters & setters
 
-    public HashMap<Player, Integer> getScoreSet() {
+    public HashMap<Integer, Integer> getScoreSet() {
         return scoreSet;
     }
 
-    public void setScoreSet(HashMap<Player, Integer> scoreSet) {
+    public void setScoreSet(HashMap<Integer, Integer> scoreSet) {
         this.scoreSet = scoreSet;
     }
 

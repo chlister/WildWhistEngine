@@ -14,19 +14,6 @@ import java.util.*;
  * @date 04-02-2019
  */
 public class Whist extends Game implements DealerToken, GameFunctionRespondable {
-    @Override
-    public void run() {
-        //TODO: Wait for Play Condition
-        try {
-            System.out.println("Hello");
-            synchronized (waiter) {
-                play();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     enum calls {
         GRAND,
         SOL,
@@ -40,6 +27,8 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
     public GameState currentState;
     int callResponse;
     Object waiter;
+    int[] playerCalls = new int[this.getMAX_PLAYER()];
+
 
     public Whist() {
         super(4, 4);
@@ -47,7 +36,6 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         currentDealer = 0;
         setActivePlayer(currentDealer + 1);
         waiter = new Object();
-
     }
 
     //region getter & setter
@@ -63,6 +51,19 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         return currentDealer;
     }
     //endregion
+
+    @Override
+    public void run() {
+        //TODO: Wait for Play Condition
+        try {
+            System.out.println("Hello");
+            synchronized (waiter) {
+                play();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void play() throws InterruptedException {
@@ -104,11 +105,42 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
     private void solRound() throws InterruptedException {
         //Player Chooses card
         //Next Player
+        final int first = 0;
+        int[] tricks = new int[4];
+        Arrays.fill(tricks, 0);
+        int startingPlayer = getActivePlayer();
         do {
             getHandler().selectACard(getActivePlayer());
             waiter.wait();
+            // Has all players played a card? -> then who tricks?
+            if (((ArrayList<Pile>) getPiles()).get(getMAX_PLAYER()).getCardsInPile().size() == getMAX_PLAYER()) {
+                int winner = -1;
+                int highestVal = -1;
+                for (Card c : ((ArrayList<Pile>) getPiles()).get(getMAX_PLAYER()).getCardsInPile()) {
+                    if (((StandardCard) c).getValue() > highestVal &&
+                            ((StandardCard) ((ArrayList) ((ArrayList<Pile>) getPiles())
+                                    .get(getMAX_PLAYER()).getCardsInPile()).get(first))
+                                    .getSuit().equals(((StandardCard) c).getSuit())) {
+                        winner = ((ArrayList<Card>) ((ArrayList<Pile>) getPiles())
+                                .get(getMAX_PLAYER()).getCardsInPile()).indexOf(c);
+                        highestVal = ((StandardCard) c).getValue();
+                    }
+                }
+                // calc score
+                tricks[winner]++;
+            }
+            //TODO: if Sol player has 2 tricks -> end game
+            // check if all card have been played
+            if (((ArrayList<Pile>) getPiles()).get(first).getCardsInPile().isEmpty())
+                currentState = GameState.ROUNDDONE;
         }
         while (currentState == GameState.PLAYING);
+        // check if SOL player won
+        for (int i :
+                playerCalls) {
+            
+        }
+        setScoreSet();
 
     }
 
@@ -123,8 +155,7 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
 
     private void callRound() throws InterruptedException {
         currentState = GameState.CALLROUND;
-        int[] intArray = new int[this.getMAX_PLAYER()];
-        Arrays.fill(intArray, 0);
+        Arrays.fill(playerCalls, 0);
         String[] theCall = new String[calls.values().length];
         int index = 0;
 
@@ -135,9 +166,9 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
 
         while (currentState == GameState.CALLROUND) {
             //Checks if everyone choose Pass
-            if (!Arrays.equals(intArray, new int[]{3, 3, 3, 3})) {
+            if (!Arrays.equals(playerCalls, new int[]{3, 3, 3, 3})) {
                 //Checks if player have chosen a call
-                if (intArray[getActivePlayer()] != 3) {
+                if (playerCalls[getActivePlayer()] != 3) {
                     getHandler().selectFromArray(theCall, ((Player) ((ArrayList) getJoinedPlayers()).get(getActivePlayer())));
                     System.out.println("We are waitin'");
                     waiter.wait();
@@ -161,7 +192,7 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
                             break;
                     }
 
-                    intArray[getActivePlayer()] = responseIndex;
+                    playerCalls[getActivePlayer()] = responseIndex;
                     if (currentState == GameState.CALLROUND)
                         if (getActivePlayer() < this.getMAX_PLAYER() - 1)
                             setActivePlayer(getActivePlayer() + 1);
