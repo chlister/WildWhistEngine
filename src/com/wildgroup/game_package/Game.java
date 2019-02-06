@@ -1,6 +1,5 @@
 package com.wildgroup.game_package;
 
-import com.wildgroup.db_package.dbModels.PlayerEntity;
 import com.wildgroup.deck_package.Deck;
 import com.wildgroup.game_package.models.Player;
 
