@@ -10,7 +10,8 @@ import com.wildgroup.game_package.models.Player;
 import java.util.*;
 
 /**
- * @author Marc Rohwedder Kær, Dennis F. J. Dupont
+ * (NOTE: Par-programmeret)
+ * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
  * @date 04-02-2019
  */
 public class Whist extends Game implements DealerToken, GameFunctionRespondable {
@@ -136,11 +137,29 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         }
         while (currentState == GameState.PLAYING);
         // check if SOL player won
-        for (int i :
-                playerCalls) {
-            
+        int solPlayers = 0;
+        int solWinners = 0;
+        for (int i : playerCalls) {
+            if(i == 1){
+                solPlayers++; // Find all sol players
+                if (tricks[i] <= 2)
+                {
+                    solWinners++; // Find sol winners
+                    getScoreSet().put(i, getScoreSet().get(i) + 3);
+                }
+                else
+                    getScoreSet().put(i, getScoreSet().get(i) - 3);
+            }
         }
-        setScoreSet();
+        int solLosers = solPlayers-solWinners; // Find number of those who lost
+        for (int i: playerCalls){
+            if (i != 1 && solWinners != 0){
+                getScoreSet().put(i, getScoreSet().get(i) - ((int) Math.round(Math.pow(3, solWinners-1))));
+            }
+            if(i != 1 && solLosers != 0) {
+                getScoreSet().put(i, getScoreSet().get(i) + ((int) Math.round(Math.pow(3, solLosers - 1))));
+            }
+        } //TODO: Inform players of winner + score
 
     }
 
@@ -233,7 +252,7 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
     @Override
     void initPiles() {
         setPiles(new ArrayList<>());
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < getMAX_PLAYER(); i++) {
             getPiles().add(new Pile(new ArrayList<>(), i, false, true));
         }
         getPiles().add(new Pile(new ArrayList<>(), 5, true, true));
@@ -269,10 +288,11 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         }
     }
 
-    private HashMap<Player, Integer> initScore() {
-        HashMap<Player, Integer> hm = new HashMap<>();
+    private HashMap<Integer, Integer> initScore() {
+        HashMap<Integer, Integer> hm = new HashMap<>();
+        int playerNum = 0;
         for (Player p : getJoinedPlayers()) {
-            hm.put(p, 0);
+            hm.put(playerNum++, 0);
         }
         return hm;
     }
