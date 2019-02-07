@@ -1,12 +1,14 @@
 package com.wildgroup.api;
 
 import com.wildgroup.message.Message;
+import com.wildgroup.message.Model.CardModel;
 import com.wildgroup.message.Model.RoomModel;
 import com.wildgroup.message.Model.UserModel;
 import com.wildgroup.message.MessageMethods;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -17,23 +19,32 @@ import java.util.Date;
 public class Client {
     private WebsocketClientEndpoint clientEndPoint;
 
-    public Client(){
+    public Client(String url){
         try {
-            clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:8080/WildWhistEngine_war_exploded/ws"));
+            if(url.isEmpty())
+                clientEndPoint = new WebsocketClientEndpoint(new URI(url));
+            else
+                clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:8080/WildWhistEngine_war_exploded/ws"));
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return;
         }
 
         // add listener
-        clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
+        clientEndPoint.addMessageHandler(new MessageHandler() {
+            @Override
             public void handleMessage(String message) {
                 System.out.println(message);
+            }
+
+            @Override
+            public void handleSelectCards(ArrayList<CardModel> cards) {
+
             }
         });
     }
 
-    public void addNewMessageHandler(WebsocketClientEndpoint.MessageHandler mh){
+    public void addNewMessageHandler(MessageHandler mh){
         clientEndPoint.addMessageHandler(mh);
     }
 
@@ -61,5 +72,13 @@ public class Client {
         RoomModel roomModel = new RoomModel(name, 2, 0, "Test", false);
         Message message = new Message(MessageMethods.JOINROOM, roomModel);
         clientEndPoint.sendMessage(message.encode());
+    }
+
+    public void selectArrayResponse(int i){
+        clientEndPoint.sendMessage(new Message(MessageMethods.SELECTFROMARRAY, i).encode());
+    }
+
+    public void selectCardResponse(CardModel cm){
+        clientEndPoint.sendMessage(new Message(MessageMethods.SELECTCARDS, cm).encode());
     }
 }

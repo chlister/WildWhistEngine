@@ -27,6 +27,7 @@ public class MessageMethods {
     static public final int UPDATEPILES = 24; // from Server
     static public final int GAMEMESSAGE = 25; // from Server
     static public final int SHOWCARDS = 26; // from Server
+    static public final int SELECTFROMARRAY = 27;
 
     // General methods
     static public final int TOAST = 50;

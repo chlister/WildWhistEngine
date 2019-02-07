@@ -62,7 +62,7 @@ public class ServerEndPoint {
             handleMessageMethods(session, myMessage);
         }
         else{
-            //TODO: User is not log in response
+            session.getBasicRemote().sendText("Not login");
         }
     }
 

@@ -2,6 +2,8 @@ package com.wildgroup.game_package;
 
 import com.wildgroup.deck_package.Card;
 
+import java.io.IOException;
+
 /**
  * Author: Dennis F. J. Dupont
  * Date: 06-02-2019
@@ -9,5 +11,5 @@ import com.wildgroup.deck_package.Card;
  */
 public interface GameFunctionRespondable {
     void setCallResponse(int i);
-    void selectedCardResponse(int seatId, Card card);
+    void selectedCardResponse(int seatId, Card card) throws IOException;
 }

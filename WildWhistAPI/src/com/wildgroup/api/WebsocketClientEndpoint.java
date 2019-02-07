@@ -1,6 +1,12 @@
 package com.wildgroup.api;
 
+import com.google.gson.internal.LinkedTreeMap;
+import com.wildgroup.message.Message;
+import com.wildgroup.message.MessageMethods;
+import com.wildgroup.message.Model.CardModel;
+
 import java.net.URI;
+import java.util.ArrayList;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
@@ -60,7 +66,16 @@ public class WebsocketClientEndpoint {
     @OnMessage
     public void onMessage(String message) {
         if (this.messageHandler != null) {
-            this.messageHandler.handleMessage(message);
+            Message m = new Message(message);
+            if(m.getMethod() == MessageMethods.UPDATEPILES) {
+                ArrayList<CardModel> cm = new ArrayList<>();
+                for (LinkedTreeMap ltm : (LinkedTreeMap[]) m.getMobject()) {
+                    cm.add(CardModel.Deserialize(ltm));
+                }
+                this.messageHandler.handleSelectCards(cm);
+            }
+            else
+                this.messageHandler.handleMessage(message);
         }
     }
 
@@ -82,11 +97,4 @@ public class WebsocketClientEndpoint {
         this.userSession.getAsyncRemote().sendText(message);
     }
 
-    /**
-     * Message handler.
-     *
-     */
-    public static interface MessageHandler {
-        public void handleMessage(String message);
-    }
 }

@@ -3,6 +3,7 @@ package com.wildgroup.game_package;
 import com.wildgroup.deck_package.Deck;
 import com.wildgroup.game_package.models.Player;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -102,7 +103,7 @@ public abstract class Game implements Runnable {
     }
     //endregion
 
-    abstract void play() throws InterruptedException;
+    abstract void play() throws InterruptedException, IOException;
 
     abstract boolean winningCondition();
 
