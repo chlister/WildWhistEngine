@@ -108,4 +108,6 @@ public abstract class Game implements Runnable {
     abstract boolean winningCondition();
 
     abstract void initPiles();
+
+    abstract void nextPlayer();
 }
