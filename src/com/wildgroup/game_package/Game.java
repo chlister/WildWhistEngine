@@ -105,7 +105,7 @@ public abstract class Game implements Runnable {
 
     abstract void play() throws InterruptedException, IOException;
 
-    abstract boolean winningCondition();
+    abstract boolean winningCondition() throws IOException;
 
     abstract void initPiles();
 

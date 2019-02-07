@@ -49,8 +49,8 @@ public class WhistTest {
                     arr[0] = r.nextInt(stringArray.length);
                     arr[1] = stringArray.length;
                 }
-                while(arr[0] == stringArray.length-2 );
-
+                //while(arr[0] == stringArray.length-2 ); // don't allow Grandi
+                while(arr[0] != stringArray.length-1); // only allow Pass
                 //arr[0] = System.in.read();
 
                 System.out.println("User " + seatId + " picked " + stringArray[arr[0]]);
@@ -122,6 +122,7 @@ public class WhistTest {
                          ) {
                         System.out.print("(" + c.getName() + ")  ");
                     }
+                    System.out.println("");
                     System.out.println("----------------------------------------------------------------------");
 
                 }

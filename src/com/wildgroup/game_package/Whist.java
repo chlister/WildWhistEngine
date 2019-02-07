@@ -8,6 +8,7 @@ import com.wildgroup.deck_package.Suit;
 import com.wildgroup.game_package.models.Player;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -81,14 +82,14 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
     public void play() throws InterruptedException, IOException {
 // TODO: make work
         setScoreSet(initScore());
-        initPiles();
-        boolean done = true;
-        while (done) {
+        while (!winningCondition()) {
+            initPiles();
             this.getDeck().shuffle();
             deal();
             callRound();
             startRound();
-            done = false;
+            this.setDeck(DeckFactory.getStandardDeck());
+            nextDealer();
         }
     }
 
@@ -123,6 +124,7 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
      * Method runs a Sol round
      * @throws InterruptedException
      */
+    @SuppressWarnings("Duplicates")
     private void solRound() throws InterruptedException, IOException {
         //Player Chooses card
         //Next Player
@@ -179,7 +181,6 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
             if (((ArrayList<Pile>) getPiles()).get(first).getCardsInPile().isEmpty())
                 currentState = GameState.ROUNDDONE;
 
-            //:TODO NEXT PLAYER
             nextPlayer();
         }
         while (currentState == GameState.PLAYING);
@@ -219,8 +220,94 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
      * Method runs a Pas round
      * @throws InterruptedException
      */
-    private void passRound() {
+    @SuppressWarnings("Duplicates")
+    private void passRound() throws IOException, InterruptedException {
+        //Player Chooses card
+        //Next Player
+        int firstPlayer = getActivePlayer();
+        final int first = 0;
+        int[] tricks = new int[4];
+        Arrays.fill(tricks, 0);
+        int startingPlayer = getActivePlayer();
+        do {
+            getHandler().selectACard(getActivePlayer());
+            waiter.wait();
+            // Has all players played a card? -> then who tricks?
+            if (((ArrayList<Pile>) getPiles()).get(getMAX_PLAYER()).getCardsInPile().size() == getMAX_PLAYER()) {
+                int winner = -1;
+                int highestVal = -1;
+                for (Card c : ((ArrayList<Pile>) getPiles()).get(getMAX_PLAYER()).getCardsInPile()) {
+                    if (((StandardCard) c).getValue() > highestVal &&
+                            ((StandardCard) ((ArrayList) ((ArrayList<Pile>) getPiles())
+                                    .get(getMAX_PLAYER()).getCardsInPile()).get(first))
+                                    .getSuit().equals(((StandardCard) c).getSuit())) {
+                        winner = ((ArrayList<Card>) ((ArrayList<Pile>) getPiles())
+                                .get(getMAX_PLAYER()).getCardsInPile()).indexOf(c);
+                        highestVal = ((StandardCard) c).getValue();
+                    }
+                }
+                // calc score
+                int win = winner + first;
+                if(win > getMAX_PLAYER()-1)
+                    tricks[win%getMAX_PLAYER()-1]++;
+                else
+                    tricks[win]++;
 
+                setActivePlayer(winner);
+                getHandler().messageDebug("+++ TRICKS GOES TO: " + winner + "   ( " + tricks[0] + " , " + tricks[1] + " , " + tricks[2] + " , " + tricks[3] + " )");
+                ((ArrayList<Pile>) getPiles()).get(getMAX_PLAYER()).getCardsInPile().clear();
+            }
+
+
+            // check if all card have been played
+            if (((ArrayList<Pile>) getPiles()).get(first).getCardsInPile().isEmpty())
+                currentState = GameState.ROUNDDONE;
+            nextPlayer();
+        }
+        while (currentState == GameState.PLAYING);
+        // TODO: Point giving
+
+        int[][] arr = new int[4][2];
+        for (int[] row: arr)
+            Arrays.fill(row, -1);
+        int index = 0;
+        for(int i : tricks){
+            arr[index][0] = i;
+            arr[index][1] = index;
+            index++;
+        }
+        //Arrays.sort(arr);
+        java.util.Arrays.sort(arr, new java.util.Comparator<int[]>() {
+            public int compare(int[] a, int[] b) {
+                return Integer.compare(a[0], b[0]);
+            }
+        });
+
+        if(arr[0][0] == arr[1][0] && arr[1][0] == arr[2][0]){
+            getScoreSet().put(arr[0][1], getScoreSet().get(arr[0][1]) + 2);
+            getScoreSet().put(arr[1][1], getScoreSet().get(arr[1][1]) + 2);
+            getScoreSet().put(arr[2][1], getScoreSet().get(arr[2][1]) + 2);
+            getScoreSet().put(arr[3][1], getScoreSet().get(arr[3][1]) - 6);
+        }
+        else if(arr[0][0] == arr[1][0]){
+            getScoreSet().put(arr[0][1], getScoreSet().get(arr[0][1]) + 2);
+            getScoreSet().put(arr[1][1], getScoreSet().get(arr[1][1]) + 2);
+            getScoreSet().put(arr[2][1], getScoreSet().get(arr[2][1]) - 2);
+            getScoreSet().put(arr[3][1], getScoreSet().get(arr[3][1]) - 2);
+        }
+        else if(arr[1][0] == arr[2][0]){
+            getScoreSet().put(arr[0][1], getScoreSet().get(arr[0][1]) + 2);
+            getScoreSet().put(arr[1][1], getScoreSet().get(arr[1][1]) + 0);
+            getScoreSet().put(arr[2][1], getScoreSet().get(arr[2][1]) + 0);
+            getScoreSet().put(arr[3][1], getScoreSet().get(arr[3][1]) - 2);
+        }
+        else {
+            getScoreSet().put(arr[0][1], getScoreSet().get(arr[0][1]) + 2);
+            getScoreSet().put(arr[1][1], getScoreSet().get(arr[1][1]) + 1);
+            getScoreSet().put(arr[2][1], getScoreSet().get(arr[2][1]) - 1);
+            getScoreSet().put(arr[3][1], getScoreSet().get(arr[3][1]) - 2);
+        }
+        getHandler().scoreUpdate(getScoreSet());
     }
 
     /**
@@ -283,7 +370,7 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
                                 if (playerCalls[i] == responseIndex)
                                     sol++;
                             }
-                            if (passers >= getMAX_PLAYER()-sol) {
+                            if (passers >= getMAX_PLAYER()-1-sol) {
                                 currentState = GameState.PLAYING;
                             }
                             currentCall = responseIndex;
@@ -306,7 +393,9 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
                     }
 
                     playerCalls[getActivePlayer()] = responseIndex;
-                    if (currentState == GameState.CALLROUND)
+                    if (Arrays.equals(playerCalls, new int[]{3, 3, 3, 3}))
+                        currentCall = 3;
+                    else if (currentState == GameState.CALLROUND)
                         if (getActivePlayer() < this.getMAX_PLAYER() - 1)
                             setActivePlayer(getActivePlayer() + 1);
                         else
@@ -347,8 +436,15 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
      * @return Boolean
      */
     @Override
-    boolean winningCondition() {
-        return true;
+    boolean winningCondition() throws IOException {
+        for(int i = 0; i < getScoreSet().size(); i++){
+            if(getScoreSet().get(i) >= 5)
+            {
+                getHandler().messageDebug("!!!!!!!!!!!!!!! PLayer " + i + " is the TOTAL WINNER !!!!!!!!!!!!!!!!!");
+                return true;
+            }
+        }
+        return false;
 
 
     }
