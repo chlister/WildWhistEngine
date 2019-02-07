@@ -1,6 +1,5 @@
 package com.wildgroup.game_package;
 
-import com.sun.xml.internal.bind.api.impl.NameConverter;
 import com.wildgroup.deck_package.Card;
 import com.wildgroup.deck_package.DeckFactory;
 import com.wildgroup.deck_package.StandardCard;
@@ -30,7 +29,6 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
     Object waiter;
     int[] playerCalls = new int[this.getMAX_PLAYER()];
 
-
     public Whist() {
         super(4, 4);
         this.setDeck(DeckFactory.getStandardDeck());
@@ -53,6 +51,10 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
     }
     //endregion
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Method imlemented from Runnable - Used for starting a new thread
+     */
     @Override
     public void run() {
         //TODO: Wait for Play Condition
@@ -66,6 +68,11 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         }
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * play method override from game. Implementation rns a whist game
+     * @throws InterruptedException
+     */
     @Override
     public void play() throws InterruptedException {
 // TODO: make work
@@ -82,6 +89,11 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         }
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Method starts the round given the specific call made in the call round
+     * @throws InterruptedException
+     */
     private void startRound() throws InterruptedException {
         switch (calls.values()[currentCall]) {
             case SOL:
@@ -103,6 +115,11 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         }
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Method runs a Sol round
+     * @throws InterruptedException
+     */
     private void solRound() throws InterruptedException {
         //Player Chooses card
         //Next Player
@@ -163,15 +180,30 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
 
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Method runs a Pas round
+     * @throws InterruptedException
+     */
     private void passRound() {
 
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Method runs a Grand or Grandi round
+     * @throws InterruptedException
+     */
     private void grandOrDiRound(boolean di) {
 
     }
 
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Method gets the calls from the players joined
+     * @throws InterruptedException
+     */
     private void callRound() throws InterruptedException {
         currentState = GameState.CALLROUND;
         Arrays.fill(playerCalls, 0);
@@ -228,6 +260,10 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
 
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Method deals cards to the players joined
+     */
     private void deal() {
         int size = getDeck().getCards().size();
         for (int i = 0; i < size / getMAX_PLAYER(); i++) {
@@ -242,6 +278,11 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         }
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Checks if the game is over -> one player has 5 points
+     * @return Boolean
+     */
     @Override
     boolean winningCondition() {
         return true;
@@ -249,6 +290,10 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
 
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Method initializes the piles with owners being thier seatId
+     */
     @Override
     void initPiles() {
         setPiles(new ArrayList<>());
@@ -259,6 +304,10 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
 
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Method gives the dealer token to the next player
+     */
     @Override
     public void nextDealer() {
         currentDealer++;
@@ -266,6 +315,11 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
             currentDealer = 0;
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Sets trump
+     * @param t Suit
+     */
     public void setTrump(Suit t) {
         trump = t;
     }
@@ -275,6 +329,8 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
     }
 
     /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Sets value of ace
      * @param isSol is the current GameMode Sol?
      */
     void setAceValue(boolean isSol) {
@@ -288,6 +344,11 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         }
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Initializes score table
+     * @return HashMap<Integer, Integer> -> <seatId, score>
+     */
     private HashMap<Integer, Integer> initScore() {
         HashMap<Integer, Integer> hm = new HashMap<>();
         int playerNum = 0;
@@ -297,6 +358,11 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         return hm;
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Sets call response from server, and notifies
+     * @param i int -> calls index
+     */
     @Override
     public void setCallResponse(int i) {
         callResponse = i;
@@ -305,6 +371,12 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         }
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Gets the card that the player wants to play and checks if it's a legal play
+     * @param seatId int
+     * @param card Card
+     */
     @Override
     public void selectedCardResponse(int seatId, Card card) {
         StandardCard selected = (StandardCard) card;
@@ -329,6 +401,12 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
 
     }
 
+    /**
+     * @author Marc Rohwedder Kær, Dennis F. J. Dupont, Martin Juul Johansen
+     * Updates the play pile and notifies the players of the new card in the pile
+     * @param seatId int
+     * @param card Card
+     */
     private void updateCardAndNotify(int seatId, StandardCard card) {
         synchronized (waiter) {
             ((ArrayList<Pile>) getPiles()).get(4).getCardsInPile().add(card);
