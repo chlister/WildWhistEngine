@@ -12,10 +12,7 @@ import java.sql.Date;
  */
 public class DB_CRUDTest {
 
-//    static private final String select = "SELECT * FROM %s ";
-//    static private final String insert = "INSERT INTO %s ";
-//    static private final String update = "UPDATE  %s ";
-//    static private final String delete = "DELETE * FROM %s ";
+    // TODO: Find a better way to implement dates for MySQL
     static private final String date = "%s-%s-%s"; // yyyy-MM-dd
 
 
@@ -58,7 +55,6 @@ public class DB_CRUDTest {
         Assert.assertNotNull("Object couldn't be parsed, or no entries in database", u);
     }
 
-    // TODO: MultipleUserCreate
     @Test
     public void multiUserCreate() {
         String year = "1990";

@@ -35,7 +35,12 @@ public class PlayerRepository extends DBRepository<PlayerEntity> {
         }
         return pl;
     }
-// TODO: comment all
+
+    /**
+     * Create a new player in the database
+     * @param player Player to be created -> has to be paired with a user_id
+     * @return int rows affected
+     */
     public int insertBuilder(PlayerEntity player) {
         StringBuilder sb = new StringBuilder(
                 String.format(insert,
@@ -49,6 +54,14 @@ public class PlayerRepository extends DBRepository<PlayerEntity> {
         return insert(sb.toString());
     }
 
+    /**
+     * Input the Player object to be updated
+     *
+     * @param player player to be updated
+     * @return int rows updated
+     * @author Marc Rohwedder Kær
+     * @date 29-01-2019
+     */
     public int updatePlayer(PlayerEntity player){
         PlayerEntity dbPlayer = get(String.format(select, TableNames.player) + String.format(whereClauseId, PlayerDb.id, player.getId()));
         // If user exists update the variables
@@ -70,6 +83,14 @@ public class PlayerRepository extends DBRepository<PlayerEntity> {
             return 0;
     }
 
+    /**
+     * Select a single player via id
+     *
+     * @param id int player primary key
+     * @return player object
+     * @author Marc Rohwedder Kær
+     * @date 29-01-2019
+     */
     public PlayerEntity selectUser(int id) {
         StringBuilder sb = new StringBuilder();
         // Select + table name
@@ -78,6 +99,11 @@ public class PlayerRepository extends DBRepository<PlayerEntity> {
         return get(sb.toString());
     }
 
+    /**
+     * @author Marc Rohwedder Kær
+     * @date 29-01-2019
+     * @return Collection<PlayerEntity>
+     */
     public Collection<PlayerEntity> getAllUsers() {
         return getAll(String.format(select, TableNames.player));
     }

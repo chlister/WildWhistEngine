@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Author: Dennis F. J. Dupont
+ * Author: Dennis F. J. Dupont, Martin Juul Johansen
  * Date: 05-02-2019
  * Time: 13:18
  */
