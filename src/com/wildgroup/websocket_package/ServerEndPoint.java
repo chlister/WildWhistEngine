@@ -1,6 +1,5 @@
 package com.wildgroup.websocket_package;
 
-import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.wildgroup.db_package.UserRepository;
 import com.wildgroup.db_package.dbModels.UserEntity;
@@ -15,7 +14,6 @@ import com.wildgroup.message.Model.UserModel;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -25,7 +23,7 @@ import java.util.ArrayList;
 
 @ServerEndpoint("/ws")
 public class ServerEndPoint {
-    private ArrayList<GameSession> gameSessions = new ArrayList<>();
+    private ArrayList<GameRoom> gameRooms = new ArrayList<>();
     private ArrayList<UserEntity> loginUsers = new ArrayList<>();
 
     @OnOpen
@@ -169,7 +167,7 @@ public class ServerEndPoint {
 
     private void CreateRoomMethod(Session session, Message message) throws IOException {
         RoomModel room = (RoomModel) message.getMobject();
-        for (GameSession gs : gameSessions){
+        for (GameRoom gs : gameRooms){
             if(gs.getName().equals(room.getName()));
             {
                 session.getBasicRemote().sendText(new Message(MessageMethods.CREATEROOM, MessageResponse.CREATEUSER_ALREADY_EXITS).encode());
@@ -178,13 +176,13 @@ public class ServerEndPoint {
         }
         Room newRoom = new Room(room.getName());
         newRoom.AddPlayers(session);
-        gameSessions.add(newRoom);
+        gameRooms.add(newRoom);
         session.getBasicRemote().sendText(new Message(MessageMethods.CREATEROOM, MessageResponse.CREATEUSER_SUCCESS).encode());
     }
 
     private void JoinRoomMethod(Session session, Message message) throws IOException {
         RoomModel room = (RoomModel) message.getMobject();
-        for (GameSession gs : gameSessions) {
+        for (GameRoom gs : gameRooms) {
             if(gs.getName().equals(room.getName()));
             {
                 LeaveRoomMethod(session); // Check if session is in a room and Leaves that room
@@ -210,7 +208,7 @@ public class ServerEndPoint {
         if(inRoom != null) {
             if (!inRoom.isEmpty()) {
                 session.getUserProperties().remove(SessionPropertie.inRoom);
-                for (GameSession gs : gameSessions){
+                for (GameRoom gs : gameRooms){
                     if(gs.getName().equals(inRoom)){
                         if(inRoomAsSpectator)
                             gs.RemoveSpectator(session);

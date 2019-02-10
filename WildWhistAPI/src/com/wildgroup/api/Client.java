@@ -21,7 +21,7 @@ public class Client {
 
     public Client(String url){
         try {
-            if(url.isEmpty())
+            if(!url.isEmpty())
                 clientEndPoint = new WebsocketClientEndpoint(new URI(url));
             else
                 clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:8080/WildWhistEngine_war_exploded/ws"));

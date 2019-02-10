@@ -2,6 +2,10 @@ package com.wildgroup.message.Model;
 
 import com.google.gson.internal.LinkedTreeMap;
 
+/**
+ * @author Martin Juul Johansen
+ * @date 5/02/2019
+ */
 public class CardModel {
     private String name;
     private int value;
