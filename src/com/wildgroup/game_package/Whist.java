@@ -131,6 +131,7 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         final int first = 0;
         int[] tricks = new int[4];
         Arrays.fill(tricks, 0);
+        getHandler().tricksUpdate(tricks);
         int startingPlayer = getActivePlayer();
         do {
             getHandler().selectACard(getActivePlayer());
@@ -157,7 +158,8 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
                     tricks[win]++;
 
                 setActivePlayer(winner);
-                getHandler().messageDebug("+++ TRICKS GOES TO: " + winner + "   ( " + tricks[0] + " , " + tricks[1] + " , " + tricks[2] + " , " + tricks[3] + " )");
+                getHandler().tricksUpdate(tricks);
+                //getHandler().messageDebug("+++ TRICKS GOES TO: " + winner + "   ( " + tricks[0] + " , " + tricks[1] + " , " + tricks[2] + " , " + tricks[3] + " )");
                 ((ArrayList<Pile>) getPiles()).get(getMAX_PLAYER()).getCardsInPile().clear();
 
                 int solPlayers = 0;
@@ -174,13 +176,14 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
                 if(solLosers >= solPlayers)
                     currentState = GameState.ROUNDDONE;
             }
-
+            else
+                nextPlayer();
 
             // check if all card have been played
             if (((ArrayList<Pile>) getPiles()).get(first).getCardsInPile().isEmpty())
                 currentState = GameState.ROUNDDONE;
 
-            nextPlayer();
+
         }
         while (currentState == GameState.PLAYING);
         // check if SOL player won
@@ -227,6 +230,7 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
         final int first = 0;
         int[] tricks = new int[4];
         Arrays.fill(tricks, 0);
+        getHandler().tricksUpdate(tricks);
         int startingPlayer = getActivePlayer();
         do {
             getHandler().selectACard(getActivePlayer());
@@ -253,15 +257,18 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
                     tricks[win]++;
 
                 setActivePlayer(winner);
-                getHandler().messageDebug("+++ TRICKS GOES TO: " + winner + "   ( " + tricks[0] + " , " + tricks[1] + " , " + tricks[2] + " , " + tricks[3] + " )");
+                getHandler().tricksUpdate(tricks);
+                //getHandler().messageDebug("+++ TRICKS GOES TO: " + winner + "   ( " + tricks[0] + " , " + tricks[1] + " , " + tricks[2] + " , " + tricks[3] + " )");
                 ((ArrayList<Pile>) getPiles()).get(getMAX_PLAYER()).getCardsInPile().clear();
             }
+            else
+                nextPlayer();
 
 
             // check if all card have been played
             if (((ArrayList<Pile>) getPiles()).get(first).getCardsInPile().isEmpty())
                 currentState = GameState.ROUNDDONE;
-            nextPlayer();
+
         }
         while (currentState == GameState.PLAYING);
         // TODO: Point giving
@@ -315,7 +322,18 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
      * @throws InterruptedException
      */
     private void grandOrDiRound(boolean di) {
-
+        Random r = new Random();
+        int i = r.nextInt(4);
+        setActivePlayer(i);
+        getScoreSet().put(getActivePlayer(), getScoreSet().get(getActivePlayer()) + 3);
+        nextPlayer();
+        getScoreSet().put(getActivePlayer(), getScoreSet().get(getActivePlayer()) + -1);
+        nextPlayer();
+        getScoreSet().put(getActivePlayer(), getScoreSet().get(getActivePlayer()) + -1);
+        nextPlayer();
+        getScoreSet().put(getActivePlayer(), getScoreSet().get(getActivePlayer()) + -1);
+        nextPlayer();
+        getHandler().scoreUpdate(getScoreSet());
     }
 
     /**
@@ -407,7 +425,7 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
             }
         }
         currentState = GameState.PLAYING;
-        getHandler().messageDebug("It works - callRound-End");
+        //getHandler().messageDebug("It works - callRound-End");
 
     }
 
@@ -437,9 +455,9 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
     @Override
     boolean winningCondition() throws IOException {
         for(int i = 0; i < getScoreSet().size(); i++){
-            if(getScoreSet().get(i) >= 5)
+            if(getScoreSet().get(i) >= 9)
             {
-                getHandler().messageDebug("!!!!!!!!!!!!!!! PLayer " + i + " is the TOTAL WINNER !!!!!!!!!!!!!!!!!");
+                getHandler().messageDebug("!!!!!!!!!!!!!!! PLayer " + ((Player)getJoinedPlayers().toArray()[i]).getName() + " is the TOTAL WINNER !!!!!!!!!!!!!!!!!");
                 return true;
             }
         }

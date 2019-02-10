@@ -17,4 +17,5 @@ public interface GameFunctionHandler {
     void dealCards(Collection<Pile> piles);
     void updatePiles(Collection<Pile> piles) throws IOException;
     void scoreUpdate(HashMap<Integer, Integer> scoreSet);
+    void tricksUpdate(int[] tricksscore);
 }

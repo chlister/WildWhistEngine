@@ -1,12 +1,10 @@
 package com.wildgroup.websocket_package;
 
-import com.wildgroup.game_package.Game;
-
-import javax.websocket.Session;
-import java.util.ArrayList;
-import java.util.List;
-
-public class Room extends GameSession{
+/**
+ * @author Martin Juul Johansen
+ * @date 02/02/2019
+ */
+public class Room extends GameRoom {
     private RoomFunctionHandler handler;
 
     public Room(String name) {

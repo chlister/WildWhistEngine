@@ -15,13 +15,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class GameSession {
+/**
+ * @author Martin Juul Johansen
+ * @date 29/01/2019
+ */
+public abstract class GameRoom {
     private String name;
     private List<Session> spectators;
     private List<Session> players;
     private Game roomGame;
 
-    public GameSession(String name) {
+    public GameRoom(String name) {
         this.spectators = new ArrayList<>();
         this.players = new ArrayList<>();
         this.name = name;
@@ -81,6 +85,11 @@ public abstract class GameSession {
 
             @Override
             public void scoreUpdate(HashMap<Integer, Integer> scoreSet) {
+
+            }
+
+            @Override
+            public void tricksUpdate(int[] tricksscore) {
 
             }
         });
