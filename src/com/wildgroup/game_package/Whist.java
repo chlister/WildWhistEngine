@@ -80,7 +80,6 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
      */
     @Override
     public void play() throws InterruptedException, IOException {
-// TODO: make work
         setScoreSet(initScore());
         while (!winningCondition()) {
             initPiles();
@@ -488,10 +487,6 @@ public class Whist extends Game implements DealerToken, GameFunctionRespondable 
      */
     public void setTrump(Suit t) {
         trump = t;
-    }
-
-    void distributePoints() {
-
     }
 
     /**
